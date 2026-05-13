@@ -6,111 +6,454 @@
 <title>Hircost Logistics</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+}
+
 body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial, sans-serif;
     margin:0;
-    padding:20px;
+    padding:16px;
+    background:#d7d8da;
+    color:#111827;
+    font-family:Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+/* ПЛАСТИНКА */
+
+.bg-disc{
+    position:fixed;
+    width:760px;
+    height:760px;
+    right:-260px;
+    top:-170px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle at 50% 50%,
+            rgba(235,246,255,0.95) 0%,
+            rgba(130,190,220,0.85) 28%,
+            rgba(25,35,42,0.95) 58%,
+            rgba(5,8,10,0.98) 100%);
+
+    border:18px solid rgba(12,16,20,0.9);
+
+    box-shadow:
+        0 0 0 8px rgba(255,255,255,0.18),
+        0 30px 90px rgba(0,0,0,0.35);
+
+    animation:spin 38s linear infinite;
+
+    z-index:0;
+
+    opacity:0.72;
+}
+
+.bg-disc::before{
+    content:"";
+    position:absolute;
+    inset:90px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,0.28);
+}
+
+.bg-disc::after{
+    content:"";
+    position:absolute;
+    inset:220px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,0.22);
+    box-shadow:0 0 0 80px rgba(255,255,255,0.04);
+}
+
+@keyframes spin{
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.wrapper{
+    position:relative;
+    z-index:2;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
 }
 
 h1{
-    margin-bottom:18px;
+    margin:0;
+    font-size:24px;
+    color:#111827;
 }
 
-input, select{
-    width:100%;
-    box-sizing:border-box;
-    padding:12px;
-    margin-bottom:12px;
+.search-btn{
+    width:44px;
+    height:44px;
     border:none;
-    border-radius:10px;
-    font-size:16px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.72);
+    color:#111827;
+    font-size:18px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.12);
 }
 
-.card{
-    background:#1e293b;
-    border-radius:14px;
-    padding:16px;
-    margin-bottom:14px;
-    border-left:5px solid #64748b;
+.search-box{
+    display:none;
+    margin-bottom:10px;
 }
 
-.card h3{
-    margin-top:0;
+.search-box.active{
+    display:block;
 }
 
-.status{
-    font-weight:bold;
-    margin-top:10px;
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid rgba(17,24,39,0.12);
+    border-radius:12px;
+    margin-bottom:10px;
+    background:rgba(255,255,255,0.78);
+    color:#111827;
+    font-size:15px;
+    outline:none;
 }
 
-.green{ color:#22c55e; }
-.orange{ color:#f59e0b; }
-.red{ color:#ef4444; }
-.blue{ color:#3b82f6; }
-.gray{ color:#94a3b8; }
+/* СТАТУСЫ */
 
-.small{
-    color:#cbd5e1;
-    font-size:14px;
+.status-filters{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:8px;
+    margin-bottom:12px;
+}
+
+.filter-chip{
+    border:none;
+    border-radius:999px;
+    padding:10px 14px;
+    background:rgba(255,255,255,0.7);
+    color:#111827;
+    font-size:13px;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:0.2s;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+.filter-chip.active{
+    background:#111827;
+    color:white;
+}
+
+/* SUMMARY */
+
+.summary{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:8px;
+    margin-bottom:10px;
+}
+
+.summary-card{
+    min-width:190px;
+    background:rgba(255,255,255,0.74);
+    border:1px solid rgba(17,24,39,0.12);
+    border-radius:16px;
+    padding:14px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.summary-card span{
+    display:block;
+    color:#6b7280;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.summary-card b{
+    font-size:22px;
+    color:#111827;
 }
 
 .counter{
+    color:#4b5563;
+    font-size:13px;
     margin-bottom:12px;
-    color:#cbd5e1;
 }
+
+/* КАРТОЧКИ */
+
+.card{
+    background:rgba(255,255,255,0.76);
+    border:1px solid rgba(17,24,39,0.12);
+    border-radius:16px;
+    margin-bottom:10px;
+    overflow:hidden;
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card-header{
+    padding:14px;
+    cursor:pointer;
+}
+
+.card-title{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:8px;
+    color:#111827;
+}
+
+.card-subtitle{
+    font-size:13px;
+    color:#4b5563;
+}
+
+.card-body{
+    display:none;
+    padding:0 14px 14px 14px;
+    border-top:1px solid rgba(17,24,39,0.08);
+}
+
+.card.open .card-body{
+    display:block;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid rgba(17,24,39,0.07);
+    font-size:14px;
+}
+
+.row span:first-child{
+    color:#6b7280;
+}
+
+.row b{
+    color:#111827;
+    text-align:right;
+}
+
+.status{
+    display:inline-block;
+    margin-top:10px;
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.orange{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.gray{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+.empty{
+    color:#6b7280;
+    text-align:center;
+    margin-top:30px;
+}
+
+@media (max-width:600px){
+
+    .bg-disc{
+        width:620px;
+        height:620px;
+        right:-320px;
+        top:-180px;
+        opacity:0.55;
+    }
+
+    .summary-card{
+        min-width:170px;
+    }
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>📦 Hircost Logistics</h1>
+<div class="bg-disc"></div>
 
-<input type="text" id="search" placeholder="Поиск: спецификация, товар, ТК">
+<div class="wrapper">
 
-<select id="statusFilter">
-    <option value="">Все статусы</option>
-    <option value="В пути">В пути</option>
-    <option value="Принята">Принята</option>
-    <option value="Задержка">Задержка</option>
-</select>
+<div class="header">
+
+    <h1>Hircost поставки</h1>
+
+    <button
+        class="search-btn"
+        onclick="toggleSearch()"
+    >
+        🔎
+    </button>
+
+</div>
+
+<div class="search-box" id="searchBox">
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Поиск: спецификация, товар, ТК"
+    >
+
+</div>
+
+<!-- МУЛЬТИФИЛЬТР -->
+
+<div class="status-filters">
+
+    <button class="filter-chip" data-status="В пути">
+        В пути
+    </button>
+
+    <button class="filter-chip" data-status="Принята">
+        Принята
+    </button>
+
+    <button class="filter-chip" data-status="Задерживается">
+        Задерживается
+    </button>
+
+</div>
+
+<div class="summary">
+
+    <div class="summary-card">
+        <span>Штук в пути</span>
+        <b id="qtyInTransit">0</b>
+    </div>
+
+    <div class="summary-card">
+        <span>Поставок в пути</span>
+        <b id="countInTransit">0</b>
+    </div>
+
+    <div class="summary-card">
+        <span>Сумма транспорта в пути</span>
+        <b id="transportSumTransit">0 ₽</b>
+    </div>
+
+</div>
 
 <div class="counter" id="counter"></div>
+
 <div id="shipments"></div>
 
+</div>
+
 <script>
+
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
 
 let shipmentsData = [];
 
+let selectedStatuses = [];
+
+function toggleSearch(){
+
+    document
+        .getElementById("searchBox")
+        .classList
+        .toggle("active");
+}
+
+function clean(value){
+
+    if(value === undefined || value === null)
+        return "";
+
+    return String(value).trim();
+}
+
+function parseNumber(value){
+
+    if(!value) return 0;
+
+    return Number(
+        String(value)
+        .replace(/\s/g, "")
+        .replace(",", ".")
+        .replace(/[^\d.]/g, "")
+    ) || 0;
+}
+
 function parseCSV(text){
+
     const rows = [];
+
     let row = [];
     let cell = "";
     let insideQuotes = false;
 
     for(let i = 0; i < text.length; i++){
+
         const char = text[i];
         const next = text[i + 1];
 
         if(char === '"' && insideQuotes && next === '"'){
             cell += '"';
             i++;
-        } else if(char === '"'){
+        }
+
+        else if(char === '"'){
             insideQuotes = !insideQuotes;
-        } else if(char === "," && !insideQuotes){
+        }
+
+        else if(char === "," && !insideQuotes){
             row.push(cell);
             cell = "";
-        } else if((char === "\n" || char === "\r") && !insideQuotes){
+        }
+
+        else if((char === "\n" || char === "\r") && !insideQuotes){
+
             if(cell || row.length){
+
                 row.push(cell);
+
                 rows.push(row);
+
                 row = [];
+
                 cell = "";
             }
-        } else {
+        }
+
+        else{
             cell += char;
         }
     }
@@ -124,117 +467,318 @@ function parseCSV(text){
 }
 
 async function loadShipments(){
+
     const response = await fetch(SHEET_URL);
+
     const csv = await response.text();
 
     const rows = parseCSV(csv);
 
+    const headers = rows[0];
+
     shipmentsData = rows
         .slice(1)
-        .map(cols => ({
-            status: clean(cols[0]),
-            spec: clean(cols[1]),
-            item: clean(cols[4]),
-            transport: clean(cols[10]),
-            date: clean(cols[12]),
-            qty: clean(cols[5]),
-            weight: clean(cols[7]),
-            sum: clean(cols[11])
-        }))
+        .map(cols => {
+
+            const obj = {};
+
+            headers.forEach((header, index) => {
+
+                obj[clean(header)] =
+                clean(cols[index]);
+
+            });
+
+            return {
+
+                status:
+                obj["Статус"],
+
+                spec:
+                obj["Спецификация"],
+
+                item:
+                obj["Товар"],
+
+                qty:
+                obj["Общее кол-во в заказе"],
+
+                weight:
+                obj["Вес по накладной, КГ"]
+                ||
+                obj["Вес по накладной, кг"],
+
+                transport:
+                obj["Транспортная компания"],
+
+                transportSum:
+                obj["Сумма за транспорт"],
+
+                readyDate:
+                obj["Дата готовности/отгрузки"],
+
+                arrivalDate:
+                obj["Дата прихода/Срок"],
+
+                priceKg:
+                obj["Цена за кг"]
+            };
+
+        })
+
         .filter(item => item.spec);
 
     applyFilters();
 }
 
-function clean(value){
-    if(value === undefined || value === null) return "";
-    return String(value).trim();
-}
-
 function getStatusClass(status){
+
     const s = status.toLowerCase();
 
-    if(s === "принята") return "green";
-    if(s === "в пути") return "orange";
-    if(s === "задержка") return "red";
+    if(s === "принята")
+        return "green";
+
+    if(s === "в пути")
+        return "orange";
+
+    if(s === "задерживается")
+        return "red";
 
     return "gray";
 }
 
+function updateSummary(){
+
+    const inTransit =
+    shipmentsData.filter(item =>
+        item.status.toLowerCase() === "в пути"
+    );
+
+    const qty =
+    inTransit.reduce((sum, item) =>
+        sum + parseNumber(item.qty), 0
+    );
+
+    const transportSum =
+    inTransit.reduce((sum, item) =>
+        sum + parseNumber(item.transportSum), 0
+    );
+
+    document
+        .getElementById("qtyInTransit")
+        .innerText =
+        qty.toLocaleString("ru-RU");
+
+    document
+        .getElementById("countInTransit")
+        .innerText =
+        inTransit.length;
+
+    document
+        .getElementById("transportSumTransit")
+        .innerText =
+        transportSum.toLocaleString("ru-RU") + " ₽";
+}
+
 function renderShipments(data){
-    const container = document.getElementById("shipments");
-    const counter = document.getElementById("counter");
+
+    const container =
+    document.getElementById("shipments");
+
+    const counter =
+    document.getElementById("counter");
 
     container.innerHTML = "";
-    counter.innerText = `Найдено поставок: ${data.length}`;
+
+    counter.innerText =
+    `Найдено: ${data.length}`;
+
+    updateSummary();
 
     if(data.length === 0){
-        container.innerHTML = `<p class="small">Ничего не найдено.</p>`;
+
+        container.innerHTML =
+        `<div class="empty">Ничего не найдено</div>`;
+
         return;
     }
 
-    data.forEach(item => {
-        const statusClass = getStatusClass(item.status);
+    data.forEach((item, index) => {
+
+        const statusClass =
+        getStatusClass(item.status);
+
+        const specTitle =
+        item.spec.replace(
+            "Спецификация ",
+            "Спецификация №"
+        );
 
         container.innerHTML += `
-            <div class="card">
-                <h3>📦 ${item.spec}</h3>
 
-                <p><b>Товар:</b> ${item.item || "-"}</p>
-                <p><b>ТК:</b> ${item.transport || "-"}</p>
-                <p><b>Срок:</b> ${item.date || "-"}</p>
-                <p><b>Кол-во:</b> ${item.qty || "-"}</p>
-                <p><b>Вес:</b> ${item.weight || "-"}</p>
-                <p><b>Сумма транспорта:</b> ${item.sum || "-"}</p>
+        <div class="card" id="card-${index}">
+
+            <div
+                class="card-header"
+                onclick="toggleCard(${index})"
+            >
+
+                <div class="card-title">
+                    ${specTitle}
+                </div>
+
+                <div class="card-subtitle">
+                    ${item.status} · ${item.arrivalDate}
+                </div>
 
                 <div class="status ${statusClass}">
-                    ${item.status || "Без статуса"}
+                    ${item.status}
                 </div>
+
             </div>
+
+            <div class="card-body">
+
+                <div class="row">
+                    <span>Товар</span>
+                    <b>${item.item || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Кол-во</span>
+                    <b>${item.qty || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Вес</span>
+                    <b>${item.weight || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>ТК</span>
+                    <b>${item.transport || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Сумма транспорта</span>
+                    <b>${item.transportSum || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Дата готовности</span>
+                    <b>${item.readyDate || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Дата прихода/срок</span>
+                    <b>${item.arrivalDate || "-"}</b>
+                </div>
+
+                <div class="row">
+                    <span>Цена за кг</span>
+                    <b>${item.priceKg || "-"}</b>
+                </div>
+
+            </div>
+
+        </div>
+
         `;
     });
 }
 
+function toggleCard(index){
+
+    const card =
+    document.getElementById(`card-${index}`);
+
+    card.classList.toggle("open");
+}
+
 function applyFilters(){
-    const searchValue = document
+
+    const searchValue =
+    document
         .getElementById("search")
         .value
         .toLowerCase()
         .trim();
 
-    const statusValue = document
-        .getElementById("statusFilter")
-        .value
-        .trim();
-
     let filtered = shipmentsData;
 
     if(searchValue){
-        filtered = filtered.filter(item =>
-            item.spec.toLowerCase().includes(searchValue) ||
-            item.item.toLowerCase().includes(searchValue) ||
-            item.transport.toLowerCase().includes(searchValue)
+
+        filtered =
+        filtered.filter(item =>
+
+            item.spec
+            .toLowerCase()
+            .includes(searchValue)
+
+            ||
+
+            item.item
+            .toLowerCase()
+            .includes(searchValue)
+
+            ||
+
+            item.transport
+            .toLowerCase()
+            .includes(searchValue)
         );
     }
 
-    if(statusValue){
-        filtered = filtered.filter(item =>
-            item.status === statusValue
+    if(selectedStatuses.length > 0){
+
+        filtered =
+        filtered.filter(item =>
+            selectedStatuses.includes(item.status)
         );
     }
 
     renderShipments(filtered);
 }
 
-document
-    .getElementById("search")
-    .addEventListener("input", applyFilters);
+function toggleStatus(status, button){
+
+    if(selectedStatuses.includes(status)){
+
+        selectedStatuses =
+        selectedStatuses.filter(s => s !== status);
+
+        button.classList.remove("active");
+    }
+
+    else{
+
+        selectedStatuses.push(status);
+
+        button.classList.add("active");
+    }
+
+    applyFilters();
+}
 
 document
-    .getElementById("statusFilter")
-    .addEventListener("change", applyFilters);
+.querySelectorAll(".filter-chip")
+.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const status =
+        button.dataset.status;
+
+        toggleStatus(status, button);
+    });
+});
+
+document
+.getElementById("search")
+.addEventListener("input", applyFilters);
 
 loadShipments();
+
 </script>
 
 </body>
