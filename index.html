@@ -6,7 +6,9 @@
 <title>Hircost Logistics</title>
 
 <style>
-*{ box-sizing:border-box; }
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -17,6 +19,8 @@ body{
     overflow-x:hidden;
 }
 
+/* ПЛАСТИНКА */
+
 .bg-disc{
     position:fixed;
     width:760px;
@@ -24,13 +28,20 @@ body{
     right:-260px;
     top:-170px;
     border-radius:50%;
-    background:radial-gradient(circle at 50% 50%,
-        rgba(235,246,255,0.95) 0%,
-        rgba(130,190,220,0.85) 28%,
-        rgba(25,35,42,0.95) 58%,
-        rgba(5,8,10,0.98) 100%);
+
+    background:
+        radial-gradient(circle at 50% 50%,
+            rgba(235,246,255,0.95) 0%,
+            rgba(130,190,220,0.85) 28%,
+            rgba(25,35,42,0.95) 58%,
+            rgba(5,8,10,0.98) 100%);
+
     border:18px solid rgba(12,16,20,0.9);
-    box-shadow:0 0 0 8px rgba(255,255,255,0.18),0 30px 90px rgba(0,0,0,0.35);
+
+    box-shadow:
+        0 0 0 8px rgba(255,255,255,0.18),
+        0 30px 90px rgba(0,0,0,0.35);
+
     animation:spin 38s linear infinite;
     z-index:0;
     opacity:0.72;
@@ -54,11 +65,19 @@ body{
 }
 
 @keyframes spin{
-    from{ transform:rotate(0deg); }
-    to{ transform:rotate(360deg); }
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
 }
 
-.wrapper{ position:relative; z-index:2; }
+.wrapper{
+    position:relative;
+    z-index:2;
+}
 
 .header{
     display:flex;
@@ -89,7 +108,9 @@ h1{
     margin-bottom:10px;
 }
 
-.search-box.active{ display:block; }
+.search-box.active{
+    display:block;
+}
 
 input{
     width:100%;
@@ -102,6 +123,8 @@ input{
     font-size:15px;
     outline:none;
 }
+
+/* ФИЛЬТРЫ */
 
 .status-filters{
     display:flex;
@@ -128,6 +151,8 @@ input{
     background:#111827;
     color:white;
 }
+
+/* ВЕРХНИЕ ПОКАЗАТЕЛИ */
 
 .summary{
     display:flex;
@@ -165,6 +190,8 @@ input{
     margin-bottom:12px;
 }
 
+/* КАРТОЧКИ */
+
 .card{
     background:rgba(255,255,255,0.76);
     border:1px solid rgba(17,24,39,0.12);
@@ -198,7 +225,9 @@ input{
     border-top:1px solid rgba(17,24,39,0.08);
 }
 
-.card.open .card-body{ display:block; }
+.card.open .card-body{
+    display:block;
+}
 
 .row{
     display:flex;
@@ -209,7 +238,9 @@ input{
     font-size:14px;
 }
 
-.row span:first-child{ color:#6b7280; }
+.row span:first-child{
+    color:#6b7280;
+}
 
 .row b{
     color:#111827;
@@ -225,10 +256,27 @@ input{
     font-weight:bold;
 }
 
-.green{ background:#dcfce7; color:#166534; }
-.orange{ background:#fef3c7; color:#92400e; }
-.red{ background:#fee2e2; color:#991b1b; }
-.gray{ background:#e5e7eb; color:#374151; }
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.orange{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.gray{
+    background:#e5e7eb;
+    color:#374151;
+}
+
+/* ОПЛАТЫ */
 
 .pay-badge{
     display:inline-block;
@@ -249,6 +297,38 @@ input{
     color:#991b1b;
 }
 
+/* КНОПКИ ДОКУМЕНТОВ */
+
+.doc-buttons{
+    margin-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.doc-btn{
+    display:block;
+    color:white;
+    padding:11px 12px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:14px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.doc-spec{
+    background:#111827;
+}
+
+.doc-invoice{
+    background:#1f2937;
+}
+
+.doc-transport{
+    background:#374151;
+}
+
 .empty{
     color:#6b7280;
     text-align:center;
@@ -264,7 +344,9 @@ input{
         opacity:0.55;
     }
 
-    .summary-card{ min-width:170px; }
+    .summary-card{
+        min-width:170px;
+    }
 }
 </style>
 </head>
@@ -277,11 +359,21 @@ input{
 
 <div class="header">
     <h1>Hircost поставки</h1>
-    <button class="search-btn" onclick="toggleSearch()">🔎</button>
+
+    <button
+        class="search-btn"
+        onclick="toggleSearch()"
+    >
+        🔎
+    </button>
 </div>
 
 <div class="search-box" id="searchBox">
-    <input type="text" id="search" placeholder="Поиск: спецификация, товар, ТК">
+    <input
+        type="text"
+        id="search"
+        placeholder="Поиск: спецификация, товар, ТК"
+    >
 </div>
 
 <div class="status-filters">
@@ -308,23 +400,32 @@ input{
 </div>
 
 <div class="counter" id="counter"></div>
+
 <div id="shipments"></div>
 
 </div>
 
 <script>
+
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
 
 let shipmentsData = [];
+
 let selectedStatuses = [];
 
 function toggleSearch(){
-    document.getElementById("searchBox").classList.toggle("active");
+    document
+        .getElementById("searchBox")
+        .classList
+        .toggle("active");
 }
 
 function clean(value){
-    if(value === undefined || value === null) return "";
+    if(value === undefined || value === null){
+        return "";
+    }
+
     return String(value).trim();
 }
 
@@ -334,32 +435,42 @@ function normalize(value){
 
 function getField(obj, names){
     for(const name of names){
-        if(obj[name] !== undefined) return obj[name];
+        if(obj[name] !== undefined){
+            return obj[name];
+        }
     }
 
     const keys = Object.keys(obj);
 
     for(const name of names){
-        const found = keys.find(k => normalize(k) === normalize(name));
-        if(found) return obj[found];
+        const found = keys.find(k =>
+            normalize(k) === normalize(name)
+        );
+
+        if(found){
+            return obj[found];
+        }
     }
 
     return "";
 }
 
 function parseNumber(value){
-    if(!value) return 0;
+    if(!value){
+        return 0;
+    }
 
     return Number(
         String(value)
-        .replace(/\s/g, "")
-        .replace(",", ".")
-        .replace(/[^\d.]/g, "")
+            .replace(/\s/g, "")
+            .replace(",", ".")
+            .replace(/[^\d.]/g, "")
     ) || 0;
 }
 
 function parseCSV(text){
     const rows = [];
+
     let row = [];
     let cell = "";
     let insideQuotes = false;
@@ -371,19 +482,27 @@ function parseCSV(text){
         if(char === '"' && insideQuotes && next === '"'){
             cell += '"';
             i++;
-        } else if(char === '"'){
+        }
+
+        else if(char === '"'){
             insideQuotes = !insideQuotes;
-        } else if(char === "," && !insideQuotes){
+        }
+
+        else if(char === "," && !insideQuotes){
             row.push(cell);
             cell = "";
-        } else if((char === "\n" || char === "\r") && !insideQuotes){
+        }
+
+        else if((char === "\n" || char === "\r") && !insideQuotes){
             if(cell || row.length){
                 row.push(cell);
                 rows.push(row);
                 row = [];
                 cell = "";
             }
-        } else {
+        }
+
+        else{
             cell += char;
         }
     }
@@ -398,8 +517,11 @@ function parseCSV(text){
 
 async function loadShipments(){
     const response = await fetch(SHEET_URL);
+
     const csv = await response.text();
+
     const rows = parseCSV(csv);
+
     const headers = rows[0];
 
     shipmentsData = rows
@@ -413,17 +535,68 @@ async function loadShipments(){
 
             return {
                 status: getField(obj, ["Статус"]),
+
                 spec: getField(obj, ["Спецификация"]),
+
                 item: getField(obj, ["Товар"]),
+
                 qty: getField(obj, ["Общее кол-во в заказе"]),
-                weight: getField(obj, ["Вес по накладной, КГ", "Вес по накладной, кг"]),
-                transport: getField(obj, ["Транспортная компания"]),
-                transportSum: getField(obj, ["Сумма за транспорт"]),
-                readyDate: getField(obj, ["Дата готовности/отгрузки"]),
-                arrivalDate: getField(obj, ["Дата прихода/Срок"]),
-                priceKg: getField(obj, ["Цена за кг"]),
-                specPayment: getField(obj, ["оплата по спецификации", "Оплата по спецификации"]),
-                transportPayment: getField(obj, ["Оплата за транспорт", "оплата за транспорт"])
+
+                weight: getField(obj, [
+                    "Вес по накладной, КГ",
+                    "Вес по накладной, кг"
+                ]),
+
+                transport: getField(obj, [
+                    "Транспортная компания"
+                ]),
+
+                transportSum: getField(obj, [
+                    "Сумма за транспорт"
+                ]),
+
+                readyDate: getField(obj, [
+                    "Дата готовности/отгрузки"
+                ]),
+
+                arrivalDate: getField(obj, [
+                    "Дата прихода/Срок"
+                ]),
+
+                priceKg: getField(obj, [
+                    "Цена за кг"
+                ]),
+
+                specPayment: getField(obj, [
+                    "оплата по спецификации",
+                    "Оплата по спецификации"
+                ]),
+
+                transportPayment: getField(obj, [
+                    "Оплата за транспорт",
+                    "оплата за транспорт"
+                ]),
+
+                specPdf: getField(obj, [
+                    "пдф спецификация",
+                    "ПДФ спецификация",
+                    "PDF спецификация",
+                    "pdf спецификация"
+                ]),
+
+                invoicePdf: getField(obj, [
+                    "пдф накладная",
+                    "ПДФ накладная",
+                    "PDF накладная",
+                    "pdf накладная"
+                ]),
+
+                transportPdf: getField(obj, [
+                    "пдф документы транспортной",
+                    "ПДФ документы транспортной",
+                    "PDF документы транспортной",
+                    "pdf документы транспортной"
+                ])
             };
         })
         .filter(item => item.spec);
@@ -434,16 +607,28 @@ async function loadShipments(){
 function getStatusClass(status){
     const s = normalize(status);
 
-    if(s === "принята") return "green";
-    if(s === "в пути") return "orange";
-    if(s === "задерживается") return "red";
+    if(s === "принята"){
+        return "green";
+    }
+
+    if(s === "в пути"){
+        return "orange";
+    }
+
+    if(s === "задерживается"){
+        return "red";
+    }
 
     return "gray";
 }
 
 function isInTransitStatus(status){
     const s = normalize(status);
-    return s === "в пути" || s === "задерживается";
+
+    return (
+        s === "в пути" ||
+        s === "задерживается"
+    );
 }
 
 function isPaid(value){
@@ -481,27 +666,37 @@ function updateSummary(){
         sum + parseNumber(item.transportSum), 0
     );
 
-    document.getElementById("qtyInTransit").innerText =
+    document
+        .getElementById("qtyInTransit")
+        .innerText =
         qty.toLocaleString("ru-RU");
 
-    document.getElementById("countInTransit").innerText =
+    document
+        .getElementById("countInTransit")
+        .innerText =
         inTransit.length;
 
-    document.getElementById("transportSumTransit").innerText =
+    document
+        .getElementById("transportSumTransit")
+        .innerText =
         transportSum.toLocaleString("ru-RU") + " ₽";
 }
 
 function renderShipments(data){
     const container = document.getElementById("shipments");
+
     const counter = document.getElementById("counter");
 
     container.innerHTML = "";
+
     counter.innerText = `Найдено: ${data.length}`;
 
     updateSummary();
 
     if(data.length === 0){
-        container.innerHTML = `<div class="empty">Ничего не найдено</div>`;
+        container.innerHTML =
+        `<div class="empty">Ничего не найдено</div>`;
+
         return;
     }
 
@@ -515,23 +710,109 @@ function renderShipments(data){
 
         container.innerHTML += `
             <div class="card" id="card-${index}">
-                <div class="card-header" onclick="toggleCard(${index})">
-                    <div class="card-title">${specTitle}</div>
-                    <div class="card-subtitle">${item.status} · ${item.arrivalDate}</div>
-                    <div class="status ${statusClass}">${item.status}</div>
+                <div
+                    class="card-header"
+                    onclick="toggleCard(${index})"
+                >
+                    <div class="card-title">
+                        ${specTitle}
+                    </div>
+
+                    <div class="card-subtitle">
+                        ${item.status} · ${item.arrivalDate}
+                    </div>
+
+                    <div class="status ${statusClass}">
+                        ${item.status}
+                    </div>
                 </div>
 
                 <div class="card-body">
-                    <div class="row"><span>Товар</span><b>${item.item || "-"}</b></div>
-                    <div class="row"><span>Кол-во</span><b>${item.qty || "-"}</b></div>
-                    <div class="row"><span>Вес</span><b>${item.weight || "-"}</b></div>
-                    <div class="row"><span>ТК</span><b>${item.transport || "-"}</b></div>
-                    <div class="row"><span>Сумма транспорта</span><b>${item.transportSum || "-"}</b></div>
-                    <div class="row"><span>Дата готовности</span><b>${item.readyDate || "-"}</b></div>
-                    <div class="row"><span>Дата прихода/срок</span><b>${item.arrivalDate || "-"}</b></div>
-                    <div class="row"><span>Цена за кг</span><b>${item.priceKg || "-"}</b></div>
-                    <div class="row"><span>Оплата по спецификации</span><b>${paymentBadge(item.specPayment)}</b></div>
-                    <div class="row"><span>Оплата за транспорт</span><b>${paymentBadge(item.transportPayment)}</b></div>
+
+                    <div class="row">
+                        <span>Товар</span>
+                        <b>${item.item || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Кол-во</span>
+                        <b>${item.qty || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Вес</span>
+                        <b>${item.weight || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>ТК</span>
+                        <b>${item.transport || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Сумма транспорта</span>
+                        <b>${item.transportSum || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Дата готовности</span>
+                        <b>${item.readyDate || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Дата прихода/срок</span>
+                        <b>${item.arrivalDate || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Цена за кг</span>
+                        <b>${item.priceKg || "-"}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Оплата по спецификации</span>
+                        <b>${paymentBadge(item.specPayment)}</b>
+                    </div>
+
+                    <div class="row">
+                        <span>Оплата за транспорт</span>
+                        <b>${paymentBadge(item.transportPayment)}</b>
+                    </div>
+
+                    <div class="doc-buttons">
+
+                        ${item.specPdf ? `
+                            <a
+                                href="${item.specPdf}"
+                                target="_blank"
+                                class="doc-btn doc-spec"
+                            >
+                                📄 Спецификация PDF
+                            </a>
+                        ` : ""}
+
+                        ${item.invoicePdf ? `
+                            <a
+                                href="${item.invoicePdf}"
+                                target="_blank"
+                                class="doc-btn doc-invoice"
+                            >
+                                📦 Накладная PDF
+                            </a>
+                        ` : ""}
+
+                        ${item.transportPdf ? `
+                            <a
+                                href="${item.transportPdf}"
+                                target="_blank"
+                                class="doc-btn doc-transport"
+                            >
+                                🚚 Документы ТК
+                            </a>
+                        ` : ""}
+
+                    </div>
+
                 </div>
             </div>
         `;
@@ -540,11 +821,17 @@ function renderShipments(data){
 
 function toggleCard(index){
     const card = document.getElementById(`card-${index}`);
+
     card.classList.toggle("open");
 }
 
 function applyFilters(){
-    const searchValue = document.getElementById("search").value.toLowerCase().trim();
+    const searchValue =
+    document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
 
     let filtered = shipmentsData;
 
@@ -567,25 +854,35 @@ function applyFilters(){
 
 function toggleStatus(status, button){
     if(selectedStatuses.includes(status)){
-        selectedStatuses = selectedStatuses.filter(s => s !== status);
+        selectedStatuses =
+        selectedStatuses.filter(s => s !== status);
+
         button.classList.remove("active");
-    } else {
+    }
+
+    else{
         selectedStatuses.push(status);
+
         button.classList.add("active");
     }
 
     applyFilters();
 }
 
-document.querySelectorAll(".filter-chip").forEach(button => {
-    button.addEventListener("click", () => {
-        toggleStatus(button.dataset.status, button);
+document
+    .querySelectorAll(".filter-chip")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            toggleStatus(button.dataset.status, button);
+        });
     });
-});
 
-document.getElementById("search").addEventListener("input", applyFilters);
+document
+    .getElementById("search")
+    .addEventListener("input", applyFilters);
 
 loadShipments();
+
 </script>
 
 </body>
