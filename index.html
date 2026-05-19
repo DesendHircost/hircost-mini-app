@@ -6,10 +6,7 @@
 <title>Hircost Logistics</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
+*{ box-sizing:border-box; }
 
 body{
     margin:0;
@@ -20,8 +17,6 @@ body{
     overflow-x:hidden;
 }
 
-/* ПЛАСТИНКА */
-
 .bg-disc{
     position:fixed;
     width:760px;
@@ -29,24 +24,15 @@ body{
     right:-260px;
     top:-170px;
     border-radius:50%;
-
-    background:
-        radial-gradient(circle at 50% 50%,
-            rgba(235,246,255,0.95) 0%,
-            rgba(130,190,220,0.85) 28%,
-            rgba(25,35,42,0.95) 58%,
-            rgba(5,8,10,0.98) 100%);
-
+    background:radial-gradient(circle at 50% 50%,
+        rgba(235,246,255,0.95) 0%,
+        rgba(130,190,220,0.85) 28%,
+        rgba(25,35,42,0.95) 58%,
+        rgba(5,8,10,0.98) 100%);
     border:18px solid rgba(12,16,20,0.9);
-
-    box-shadow:
-        0 0 0 8px rgba(255,255,255,0.18),
-        0 30px 90px rgba(0,0,0,0.35);
-
+    box-shadow:0 0 0 8px rgba(255,255,255,0.18),0 30px 90px rgba(0,0,0,0.35);
     animation:spin 38s linear infinite;
-
     z-index:0;
-
     opacity:0.72;
 }
 
@@ -68,19 +54,11 @@ body{
 }
 
 @keyframes spin{
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
 }
 
-.wrapper{
-    position:relative;
-    z-index:2;
-}
+.wrapper{ position:relative; z-index:2; }
 
 .header{
     display:flex;
@@ -111,9 +89,7 @@ h1{
     margin-bottom:10px;
 }
 
-.search-box.active{
-    display:block;
-}
+.search-box.active{ display:block; }
 
 input{
     width:100%;
@@ -126,8 +102,6 @@ input{
     font-size:15px;
     outline:none;
 }
-
-/* СТАТУСЫ */
 
 .status-filters{
     display:flex;
@@ -154,8 +128,6 @@ input{
     background:#111827;
     color:white;
 }
-
-/* SUMMARY */
 
 .summary{
     display:flex;
@@ -193,8 +165,6 @@ input{
     margin-bottom:12px;
 }
 
-/* КАРТОЧКИ */
-
 .card{
     background:rgba(255,255,255,0.76);
     border:1px solid rgba(17,24,39,0.12);
@@ -228,9 +198,7 @@ input{
     border-top:1px solid rgba(17,24,39,0.08);
 }
 
-.card.open .card-body{
-    display:block;
-}
+.card.open .card-body{ display:block; }
 
 .row{
     display:flex;
@@ -241,9 +209,7 @@ input{
     font-size:14px;
 }
 
-.row span:first-child{
-    color:#6b7280;
-}
+.row span:first-child{ color:#6b7280; }
 
 .row b{
     color:#111827;
@@ -259,24 +225,28 @@ input{
     font-weight:bold;
 }
 
-.green{
+.green{ background:#dcfce7; color:#166534; }
+.orange{ background:#fef3c7; color:#92400e; }
+.red{ background:#fee2e2; color:#991b1b; }
+.gray{ background:#e5e7eb; color:#374151; }
+
+.pay-badge{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.pay-paid{
     background:#dcfce7;
     color:#166534;
 }
 
-.orange{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.red{
+.pay-unpaid{
     background:#fee2e2;
     color:#991b1b;
-}
-
-.gray{
-    background:#e5e7eb;
-    color:#374151;
 }
 
 .empty{
@@ -286,7 +256,6 @@ input{
 }
 
 @media (max-width:600px){
-
     .bg-disc{
         width:620px;
         height:620px;
@@ -295,11 +264,8 @@ input{
         opacity:0.55;
     }
 
-    .summary-card{
-        min-width:170px;
-    }
+    .summary-card{ min-width:170px; }
 }
-
 </style>
 </head>
 
@@ -310,48 +276,21 @@ input{
 <div class="wrapper">
 
 <div class="header">
-
     <h1>Hircost поставки</h1>
-
-    <button
-        class="search-btn"
-        onclick="toggleSearch()"
-    >
-        🔎
-    </button>
-
+    <button class="search-btn" onclick="toggleSearch()">🔎</button>
 </div>
 
 <div class="search-box" id="searchBox">
-
-    <input
-        type="text"
-        id="search"
-        placeholder="Поиск: спецификация, товар, ТК"
-    >
-
+    <input type="text" id="search" placeholder="Поиск: спецификация, товар, ТК">
 </div>
 
-<!-- МУЛЬТИФИЛЬТР -->
-
 <div class="status-filters">
-
-    <button class="filter-chip" data-status="В пути">
-        В пути
-    </button>
-
-    <button class="filter-chip" data-status="Принята">
-        Принята
-    </button>
-
-    <button class="filter-chip" data-status="Задерживается">
-        Задерживается
-    </button>
-
+    <button class="filter-chip" data-status="В пути">В пути</button>
+    <button class="filter-chip" data-status="Принята">Принята</button>
+    <button class="filter-chip" data-status="Задерживается">Задерживается</button>
 </div>
 
 <div class="summary">
-
     <div class="summary-card">
         <span>Штук в пути</span>
         <b id="qtyInTransit">0</b>
@@ -366,42 +305,49 @@ input{
         <span>Сумма транспорта в пути</span>
         <b id="transportSumTransit">0 ₽</b>
     </div>
-
 </div>
 
 <div class="counter" id="counter"></div>
-
 <div id="shipments"></div>
 
 </div>
 
 <script>
-
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
 
 let shipmentsData = [];
-
 let selectedStatuses = [];
 
 function toggleSearch(){
-
-    document
-        .getElementById("searchBox")
-        .classList
-        .toggle("active");
+    document.getElementById("searchBox").classList.toggle("active");
 }
 
 function clean(value){
-
-    if(value === undefined || value === null)
-        return "";
-
+    if(value === undefined || value === null) return "";
     return String(value).trim();
 }
 
-function parseNumber(value){
+function normalize(value){
+    return clean(value).toLowerCase();
+}
 
+function getField(obj, names){
+    for(const name of names){
+        if(obj[name] !== undefined) return obj[name];
+    }
+
+    const keys = Object.keys(obj);
+
+    for(const name of names){
+        const found = keys.find(k => normalize(k) === normalize(name));
+        if(found) return obj[found];
+    }
+
+    return "";
+}
+
+function parseNumber(value){
     if(!value) return 0;
 
     return Number(
@@ -413,47 +359,31 @@ function parseNumber(value){
 }
 
 function parseCSV(text){
-
     const rows = [];
-
     let row = [];
     let cell = "";
     let insideQuotes = false;
 
     for(let i = 0; i < text.length; i++){
-
         const char = text[i];
         const next = text[i + 1];
 
         if(char === '"' && insideQuotes && next === '"'){
             cell += '"';
             i++;
-        }
-
-        else if(char === '"'){
+        } else if(char === '"'){
             insideQuotes = !insideQuotes;
-        }
-
-        else if(char === "," && !insideQuotes){
+        } else if(char === "," && !insideQuotes){
             row.push(cell);
             cell = "";
-        }
-
-        else if((char === "\n" || char === "\r") && !insideQuotes){
-
+        } else if((char === "\n" || char === "\r") && !insideQuotes){
             if(cell || row.length){
-
                 row.push(cell);
-
                 rows.push(row);
-
                 row = [];
-
                 cell = "";
             }
-        }
-
-        else{
+        } else {
             cell += char;
         }
     }
@@ -467,272 +397,167 @@ function parseCSV(text){
 }
 
 async function loadShipments(){
-
     const response = await fetch(SHEET_URL);
-
     const csv = await response.text();
-
     const rows = parseCSV(csv);
-
     const headers = rows[0];
 
     shipmentsData = rows
         .slice(1)
         .map(cols => {
-
             const obj = {};
 
             headers.forEach((header, index) => {
-
-                obj[clean(header)] =
-                clean(cols[index]);
-
+                obj[clean(header)] = clean(cols[index]);
             });
 
             return {
-
-                status:
-                obj["Статус"],
-
-                spec:
-                obj["Спецификация"],
-
-                item:
-                obj["Товар"],
-
-                qty:
-                obj["Общее кол-во в заказе"],
-
-                weight:
-                obj["Вес по накладной, КГ"]
-                ||
-                obj["Вес по накладной, кг"],
-
-                transport:
-                obj["Транспортная компания"],
-
-                transportSum:
-                obj["Сумма за транспорт"],
-
-                readyDate:
-                obj["Дата готовности/отгрузки"],
-
-                arrivalDate:
-                obj["Дата прихода/Срок"],
-
-                priceKg:
-                obj["Цена за кг"]
+                status: getField(obj, ["Статус"]),
+                spec: getField(obj, ["Спецификация"]),
+                item: getField(obj, ["Товар"]),
+                qty: getField(obj, ["Общее кол-во в заказе"]),
+                weight: getField(obj, ["Вес по накладной, КГ", "Вес по накладной, кг"]),
+                transport: getField(obj, ["Транспортная компания"]),
+                transportSum: getField(obj, ["Сумма за транспорт"]),
+                readyDate: getField(obj, ["Дата готовности/отгрузки"]),
+                arrivalDate: getField(obj, ["Дата прихода/Срок"]),
+                priceKg: getField(obj, ["Цена за кг"]),
+                specPayment: getField(obj, ["оплата по спецификации", "Оплата по спецификации"]),
+                transportPayment: getField(obj, ["Оплата за транспорт", "оплата за транспорт"])
             };
-
         })
-
         .filter(item => item.spec);
 
     applyFilters();
 }
 
 function getStatusClass(status){
+    const s = normalize(status);
 
-    const s = status.toLowerCase();
-
-    if(s === "принята")
-        return "green";
-
-    if(s === "в пути")
-        return "orange";
-
-    if(s === "задерживается")
-        return "red";
+    if(s === "принята") return "green";
+    if(s === "в пути") return "orange";
+    if(s === "задерживается") return "red";
 
     return "gray";
 }
 
-function updateSummary(){
+function isInTransitStatus(status){
+    const s = normalize(status);
+    return s === "в пути" || s === "задерживается";
+}
 
-    const inTransit =
-    shipmentsData.filter(item =>
-        item.status.toLowerCase() === "в пути"
+function isPaid(value){
+    const v = normalize(value);
+
+    return (
+        v === "оплачено" ||
+        v === "оплачен" ||
+        v === "да" ||
+        v === "paid" ||
+        v === "+"
+    );
+}
+
+function paymentBadge(value){
+    const text = clean(value) || "Не оплачено";
+
+    if(isPaid(text)){
+        return `<span class="pay-badge pay-paid">${text}</span>`;
+    }
+
+    return `<span class="pay-badge pay-unpaid">${text}</span>`;
+}
+
+function updateSummary(){
+    const inTransit = shipmentsData.filter(item =>
+        isInTransitStatus(item.status)
     );
 
-    const qty =
-    inTransit.reduce((sum, item) =>
+    const qty = inTransit.reduce((sum, item) =>
         sum + parseNumber(item.qty), 0
     );
 
-    const transportSum =
-    inTransit.reduce((sum, item) =>
+    const transportSum = inTransit.reduce((sum, item) =>
         sum + parseNumber(item.transportSum), 0
     );
 
-    document
-        .getElementById("qtyInTransit")
-        .innerText =
+    document.getElementById("qtyInTransit").innerText =
         qty.toLocaleString("ru-RU");
 
-    document
-        .getElementById("countInTransit")
-        .innerText =
+    document.getElementById("countInTransit").innerText =
         inTransit.length;
 
-    document
-        .getElementById("transportSumTransit")
-        .innerText =
+    document.getElementById("transportSumTransit").innerText =
         transportSum.toLocaleString("ru-RU") + " ₽";
 }
 
 function renderShipments(data){
-
-    const container =
-    document.getElementById("shipments");
-
-    const counter =
-    document.getElementById("counter");
+    const container = document.getElementById("shipments");
+    const counter = document.getElementById("counter");
 
     container.innerHTML = "";
-
-    counter.innerText =
-    `Найдено: ${data.length}`;
+    counter.innerText = `Найдено: ${data.length}`;
 
     updateSummary();
 
     if(data.length === 0){
-
-        container.innerHTML =
-        `<div class="empty">Ничего не найдено</div>`;
-
+        container.innerHTML = `<div class="empty">Ничего не найдено</div>`;
         return;
     }
 
     data.forEach((item, index) => {
+        const statusClass = getStatusClass(item.status);
 
-        const statusClass =
-        getStatusClass(item.status);
-
-        const specTitle =
-        item.spec.replace(
+        const specTitle = item.spec.replace(
             "Спецификация ",
             "Спецификация №"
         );
 
         container.innerHTML += `
-
-        <div class="card" id="card-${index}">
-
-            <div
-                class="card-header"
-                onclick="toggleCard(${index})"
-            >
-
-                <div class="card-title">
-                    ${specTitle}
+            <div class="card" id="card-${index}">
+                <div class="card-header" onclick="toggleCard(${index})">
+                    <div class="card-title">${specTitle}</div>
+                    <div class="card-subtitle">${item.status} · ${item.arrivalDate}</div>
+                    <div class="status ${statusClass}">${item.status}</div>
                 </div>
 
-                <div class="card-subtitle">
-                    ${item.status} · ${item.arrivalDate}
+                <div class="card-body">
+                    <div class="row"><span>Товар</span><b>${item.item || "-"}</b></div>
+                    <div class="row"><span>Кол-во</span><b>${item.qty || "-"}</b></div>
+                    <div class="row"><span>Вес</span><b>${item.weight || "-"}</b></div>
+                    <div class="row"><span>ТК</span><b>${item.transport || "-"}</b></div>
+                    <div class="row"><span>Сумма транспорта</span><b>${item.transportSum || "-"}</b></div>
+                    <div class="row"><span>Дата готовности</span><b>${item.readyDate || "-"}</b></div>
+                    <div class="row"><span>Дата прихода/срок</span><b>${item.arrivalDate || "-"}</b></div>
+                    <div class="row"><span>Цена за кг</span><b>${item.priceKg || "-"}</b></div>
+                    <div class="row"><span>Оплата по спецификации</span><b>${paymentBadge(item.specPayment)}</b></div>
+                    <div class="row"><span>Оплата за транспорт</span><b>${paymentBadge(item.transportPayment)}</b></div>
                 </div>
-
-                <div class="status ${statusClass}">
-                    ${item.status}
-                </div>
-
             </div>
-
-            <div class="card-body">
-
-                <div class="row">
-                    <span>Товар</span>
-                    <b>${item.item || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Кол-во</span>
-                    <b>${item.qty || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Вес</span>
-                    <b>${item.weight || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>ТК</span>
-                    <b>${item.transport || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Сумма транспорта</span>
-                    <b>${item.transportSum || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Дата готовности</span>
-                    <b>${item.readyDate || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Дата прихода/срок</span>
-                    <b>${item.arrivalDate || "-"}</b>
-                </div>
-
-                <div class="row">
-                    <span>Цена за кг</span>
-                    <b>${item.priceKg || "-"}</b>
-                </div>
-
-            </div>
-
-        </div>
-
         `;
     });
 }
 
 function toggleCard(index){
-
-    const card =
-    document.getElementById(`card-${index}`);
-
+    const card = document.getElementById(`card-${index}`);
     card.classList.toggle("open");
 }
 
 function applyFilters(){
-
-    const searchValue =
-    document
-        .getElementById("search")
-        .value
-        .toLowerCase()
-        .trim();
+    const searchValue = document.getElementById("search").value.toLowerCase().trim();
 
     let filtered = shipmentsData;
 
     if(searchValue){
-
-        filtered =
-        filtered.filter(item =>
-
-            item.spec
-            .toLowerCase()
-            .includes(searchValue)
-
-            ||
-
-            item.item
-            .toLowerCase()
-            .includes(searchValue)
-
-            ||
-
-            item.transport
-            .toLowerCase()
-            .includes(searchValue)
+        filtered = filtered.filter(item =>
+            item.spec.toLowerCase().includes(searchValue) ||
+            item.item.toLowerCase().includes(searchValue) ||
+            item.transport.toLowerCase().includes(searchValue)
         );
     }
 
     if(selectedStatuses.length > 0){
-
-        filtered =
-        filtered.filter(item =>
+        filtered = filtered.filter(item =>
             selectedStatuses.includes(item.status)
         );
     }
@@ -741,44 +566,26 @@ function applyFilters(){
 }
 
 function toggleStatus(status, button){
-
     if(selectedStatuses.includes(status)){
-
-        selectedStatuses =
-        selectedStatuses.filter(s => s !== status);
-
+        selectedStatuses = selectedStatuses.filter(s => s !== status);
         button.classList.remove("active");
-    }
-
-    else{
-
+    } else {
         selectedStatuses.push(status);
-
         button.classList.add("active");
     }
 
     applyFilters();
 }
 
-document
-.querySelectorAll(".filter-chip")
-.forEach(button => {
-
+document.querySelectorAll(".filter-chip").forEach(button => {
     button.addEventListener("click", () => {
-
-        const status =
-        button.dataset.status;
-
-        toggleStatus(status, button);
+        toggleStatus(button.dataset.status, button);
     });
 });
 
-document
-.getElementById("search")
-.addEventListener("input", applyFilters);
+document.getElementById("search").addEventListener("input", applyFilters);
 
 loadShipments();
-
 </script>
 
 </body>
