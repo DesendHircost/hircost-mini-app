@@ -21,6 +21,11 @@ body{
     overflow-x:hidden;
 }
 
+/* Отступ под верхнюю панель Telegram */
+body.tg-mode{
+    padding-top:calc(env(safe-area-inset-top, 0px) + 104px);
+}
+
 /* ПЛАСТИНКА */
 
 .bg-disc{
@@ -85,24 +90,36 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:14px;
+    margin-bottom:16px;
+
+    padding:14px 14px;
+    border-radius:22px;
+
+    background:rgba(255,255,255,0.82);
+    border:1px solid rgba(17,24,39,0.10);
+    backdrop-filter:blur(14px);
+    box-shadow:0 12px 34px rgba(0,0,0,0.12);
 }
 
 h1{
     margin:0;
     font-size:24px;
+    line-height:1.15;
     color:#111827;
+    font-weight:800;
+    letter-spacing:-0.4px;
 }
 
 .search-btn{
     width:44px;
     height:44px;
+    min-width:44px;
     border:none;
     border-radius:50%;
-    background:rgba(255,255,255,0.72);
-    color:#111827;
+    background:#111827;
+    color:white;
     font-size:18px;
-    box-shadow:0 8px 24px rgba(0,0,0,0.12);
+    box-shadow:0 8px 24px rgba(0,0,0,0.18);
 }
 
 .search-box{
@@ -352,6 +369,10 @@ input{
 }
 
 @media (max-width:600px){
+    body.tg-mode{
+        padding-top:calc(env(safe-area-inset-top, 0px) + 112px);
+    }
+
     .bg-disc{
         width:620px;
         height:620px;
@@ -362,6 +383,10 @@ input{
 
     .summary-card{
         min-width:170px;
+    }
+
+    h1{
+        font-size:22px;
     }
 }
 </style>
@@ -430,12 +455,13 @@ function initTelegramMiniApp(){
         return;
     }
 
-    tg.ready();
+    document.body.classList.add("tg-mode");
 
+    tg.ready();
     tg.expand();
 
     try{
-        tg.setHeaderColor("#d7d8da");
+        tg.setHeaderColor("#b91c1c");
         tg.setBackgroundColor("#d7d8da");
     } catch(error){
         console.log("Theme color error:", error);
