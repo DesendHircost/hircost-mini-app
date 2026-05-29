@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hircost Logistics</title>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
 *{
     box-sizing:border-box;
@@ -297,10 +299,24 @@ input{
     color:#991b1b;
 }
 
-/* КНОПКИ ДОКУМЕНТОВ */
+/* ДОКУМЕНТЫ */
+
+.documents-block{
+    margin-top:16px;
+    padding:12px;
+    border-radius:14px;
+    background:rgba(17,24,39,0.06);
+    border:1px solid rgba(17,24,39,0.08);
+}
+
+.documents-title{
+    font-size:14px;
+    font-weight:bold;
+    color:#111827;
+    margin-bottom:10px;
+}
 
 .doc-buttons{
-    margin-top:14px;
     display:flex;
     flex-direction:column;
     gap:8px;
@@ -406,6 +422,35 @@ input{
 </div>
 
 <script>
+
+function initTelegramMiniApp(){
+    const tg = window.Telegram?.WebApp;
+
+    if(!tg){
+        return;
+    }
+
+    tg.ready();
+
+    tg.expand();
+
+    try{
+        tg.setHeaderColor("#d7d8da");
+        tg.setBackgroundColor("#d7d8da");
+    } catch(error){
+        console.log("Theme color error:", error);
+    }
+
+    if(tg.requestFullscreen){
+        try{
+            tg.requestFullscreen();
+        } catch(error){
+            console.log("Fullscreen error:", error);
+        }
+    }
+}
+
+window.addEventListener("load", initTelegramMiniApp);
 
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
@@ -682,6 +727,55 @@ function updateSummary(){
         transportSum.toLocaleString("ru-RU") + " ₽";
 }
 
+function documentsBlock(item){
+    if(!item.specPdf && !item.invoicePdf && !item.transportPdf){
+        return "";
+    }
+
+    return `
+        <div class="documents-block">
+            <div class="documents-title">Документы</div>
+
+            <div class="doc-buttons">
+
+                ${item.specPdf ? `
+                    <a
+                        href="${item.specPdf}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="doc-btn doc-spec"
+                    >
+                        📄 Спецификация PDF
+                    </a>
+                ` : ""}
+
+                ${item.invoicePdf ? `
+                    <a
+                        href="${item.invoicePdf}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="doc-btn doc-invoice"
+                    >
+                        📦 Накладная PDF
+                    </a>
+                ` : ""}
+
+                ${item.transportPdf ? `
+                    <a
+                        href="${item.transportPdf}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="doc-btn doc-transport"
+                    >
+                        🚚 Документы ТК
+                    </a>
+                ` : ""}
+
+            </div>
+        </div>
+    `;
+}
+
 function renderShipments(data){
     const container = document.getElementById("shipments");
 
@@ -779,39 +873,7 @@ function renderShipments(data){
                         <b>${paymentBadge(item.transportPayment)}</b>
                     </div>
 
-                    <div class="doc-buttons">
-
-                        ${item.specPdf ? `
-                            <a
-                                href="${item.specPdf}"
-                                target="_blank"
-                                class="doc-btn doc-spec"
-                            >
-                                📄 Спецификация PDF
-                            </a>
-                        ` : ""}
-
-                        ${item.invoicePdf ? `
-                            <a
-                                href="${item.invoicePdf}"
-                                target="_blank"
-                                class="doc-btn doc-invoice"
-                            >
-                                📦 Накладная PDF
-                            </a>
-                        ` : ""}
-
-                        ${item.transportPdf ? `
-                            <a
-                                href="${item.transportPdf}"
-                                target="_blank"
-                                class="doc-btn doc-transport"
-                            >
-                                🚚 Документы ТК
-                            </a>
-                        ` : ""}
-
-                    </div>
+                    ${documentsBlock(item)}
 
                 </div>
             </div>
