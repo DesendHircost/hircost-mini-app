@@ -12,6 +12,10 @@
     box-sizing:border-box;
 }
 
+html, body{
+    overscroll-behavior-y:none;
+}
+
 body{
     margin:0;
     padding:16px;
@@ -21,7 +25,6 @@ body{
     overflow-x:hidden;
 }
 
-/* Отступ под верхнюю панель Telegram */
 body.tg-mode{
     padding-top:calc(env(safe-area-inset-top, 0px) + 104px);
 }
@@ -72,19 +75,16 @@ body.tg-mode{
 }
 
 @keyframes spin{
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
 }
 
 .wrapper{
     position:relative;
     z-index:2;
 }
+
+/* ВЕРХ */
 
 .header{
     display:flex;
@@ -95,31 +95,37 @@ body.tg-mode{
     padding:14px 14px;
     border-radius:22px;
 
-    background:rgba(255,255,255,0.82);
-    border:1px solid rgba(17,24,39,0.10);
+    background:linear-gradient(135deg, rgba(15,118,110,0.96), rgba(12,74,110,0.96));
+    border:1px solid rgba(255,255,255,0.20);
     backdrop-filter:blur(14px);
-    box-shadow:0 12px 34px rgba(0,0,0,0.12);
+    box-shadow:0 12px 34px rgba(0,0,0,0.18);
 }
 
 h1{
     margin:0;
     font-size:24px;
     line-height:1.15;
-    color:#111827;
+    color:white;
     font-weight:800;
     letter-spacing:-0.4px;
 }
 
-.search-btn{
+.header-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.round-btn{
     width:44px;
     height:44px;
     min-width:44px;
     border:none;
     border-radius:50%;
-    background:#111827;
-    color:white;
+    background:rgba(255,255,255,0.92);
+    color:#0f172a;
     font-size:18px;
-    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+    box-shadow:0 8px 24px rgba(0,0,0,0.16);
 }
 
 .search-box{
@@ -143,72 +149,27 @@ input, select{
     outline:none;
 }
 
-/* ТРЕБУЮТ ВНИМАНИЯ */
+/* УПРАВЛЕНИЕ */
 
-.attention-block{
-    margin-bottom:12px;
-    padding:14px;
-    border-radius:18px;
-    background:rgba(254,226,226,0.82);
-    border:1px solid rgba(153,27,27,0.18);
-    box-shadow:0 10px 28px rgba(0,0,0,0.08);
-    backdrop-filter:blur(12px);
-}
-
-.attention-top{
+.top-actions{
     display:flex;
-    justify-content:space-between;
     gap:10px;
-    align-items:center;
-}
-
-.attention-title{
-    font-size:15px;
-    font-weight:800;
-    color:#991b1b;
-}
-
-.attention-count{
-    font-size:24px;
-    font-weight:900;
-    color:#991b1b;
-}
-
-.attention-details{
-    margin-top:6px;
-    color:#7f1d1d;
-    font-size:12px;
-    line-height:1.45;
-}
-
-/* ПЕРЕКЛЮЧАТЕЛИ */
-
-.chip-row{
-    display:flex;
-    gap:8px;
     overflow-x:auto;
     padding-bottom:8px;
     margin-bottom:10px;
 }
 
-.filter-chip,
-.view-chip{
+.action-btn{
     border:none;
-    border-radius:999px;
-    padding:10px 14px;
-    background:rgba(255,255,255,0.7);
+    border-radius:14px;
+    padding:11px 14px;
+    background:rgba(255,255,255,0.78);
     color:#111827;
-    font-size:13px;
+    font-size:14px;
+    font-weight:700;
     white-space:nowrap;
     cursor:pointer;
-    transition:0.2s;
     box-shadow:0 6px 18px rgba(0,0,0,0.08);
-}
-
-.filter-chip.active,
-.view-chip.active{
-    background:#111827;
-    color:white;
 }
 
 .controls-grid{
@@ -447,6 +408,245 @@ input, select{
     cursor:pointer;
 }
 
+/* FLOAT ATTENTION */
+
+.attention-float{
+    position:fixed;
+    right:18px;
+    bottom:20px;
+    width:58px;
+    height:58px;
+    border:none;
+    border-radius:50%;
+    background:#b91c1c;
+    color:white;
+    font-size:28px;
+    font-weight:900;
+    z-index:30;
+    box-shadow:0 16px 36px rgba(127,29,29,0.35);
+}
+
+.attention-badge{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    min-width:24px;
+    height:24px;
+    padding:0 6px;
+    border-radius:999px;
+    background:#111827;
+    color:white;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:80;
+    background:rgba(17,24,39,0.55);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    padding:12px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-content{
+    width:100%;
+    max-height:88vh;
+    background:#f8fafc;
+    border-radius:22px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 24px 80px rgba(0,0,0,0.30);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:14px;
+    background:#0f766e;
+    color:white;
+}
+
+.modal-title{
+    font-size:16px;
+    font-weight:800;
+}
+
+.modal-close{
+    border:none;
+    border-radius:12px;
+    padding:9px 12px;
+    background:#b91c1c;
+    color:white;
+    font-weight:bold;
+}
+
+.modal-body{
+    padding:14px;
+    overflow:auto;
+}
+
+/* ФИЛЬТРЫ В МОДАЛКЕ */
+
+.filter-section{
+    margin-bottom:16px;
+}
+
+.filter-section-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:8px;
+    color:#111827;
+}
+
+.chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.filter-chip{
+    border:none;
+    border-radius:999px;
+    padding:10px 14px;
+    background:#e5e7eb;
+    color:#111827;
+    font-size:13px;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.filter-chip.active{
+    background:#111827;
+    color:white;
+}
+
+/* СПИСОК ПРОБЛЕМ */
+
+.issue-item{
+    background:white;
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid rgba(17,24,39,0.08);
+}
+
+.issue-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:8px;
+    color:#111827;
+}
+
+.issue-list{
+    margin:0;
+    padding-left:18px;
+    color:#7f1d1d;
+    font-size:13px;
+    line-height:1.45;
+}
+
+/* КАЛЕНДАРЬ */
+
+.calendar-controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.calendar-month{
+    font-size:16px;
+    font-weight:800;
+}
+
+.calendar-nav{
+    border:none;
+    border-radius:12px;
+    padding:9px 12px;
+    background:#111827;
+    color:white;
+    font-weight:bold;
+}
+
+.calendar-grid{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:6px;
+}
+
+.calendar-weekday{
+    text-align:center;
+    font-size:12px;
+    color:#6b7280;
+    font-weight:bold;
+    padding:6px 0;
+}
+
+.calendar-day{
+    min-height:42px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    color:#111827;
+    font-size:14px;
+    position:relative;
+}
+
+.calendar-day.empty-day{
+    background:transparent;
+}
+
+.calendar-day.has-arrival{
+    background:#0f766e;
+    color:white;
+    font-weight:800;
+}
+
+.calendar-day.has-arrival::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:6px;
+    width:6px;
+    height:6px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:white;
+}
+
+.calendar-day.selected{
+    outline:3px solid #b91c1c;
+}
+
+.calendar-specs{
+    margin-top:14px;
+}
+
+.calendar-spec{
+    background:white;
+    border-radius:14px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:700;
+    border:1px solid rgba(17,24,39,0.08);
+}
+
 .toast{
     position:fixed;
     left:50%;
@@ -465,23 +665,6 @@ input, select{
 
 .toast.active{
     opacity:1;
-}
-
-/* КАЛЕНДАРЬ */
-
-.calendar-group{
-    margin-bottom:16px;
-}
-
-.calendar-date{
-    margin:14px 0 10px 0;
-    padding:10px 12px;
-    border-radius:14px;
-    background:rgba(17,24,39,0.82);
-    color:white;
-    font-size:14px;
-    font-weight:bold;
-    backdrop-filter:blur(12px);
 }
 
 .empty{
@@ -527,12 +710,9 @@ input, select{
 <div class="header">
     <h1>Hircost поставки</h1>
 
-    <button
-        class="search-btn"
-        onclick="toggleSearch()"
-    >
-        🔎
-    </button>
+    <div class="header-actions">
+        <button class="round-btn" onclick="toggleSearch()">🔎</button>
+    </div>
 </div>
 
 <div class="search-box" id="searchBox">
@@ -543,30 +723,9 @@ input, select{
     >
 </div>
 
-<div class="attention-block">
-    <div class="attention-top">
-        <div class="attention-title">Требуют внимания:</div>
-        <div class="attention-count" id="attentionCount">0</div>
-    </div>
-    <div class="attention-details" id="attentionDetails"></div>
-</div>
-
-<div class="chip-row">
-    <button class="view-chip active" data-view="list">📋 Список</button>
-    <button class="view-chip" data-view="calendar">📅 Календарь</button>
-</div>
-
-<div class="chip-row">
-    <button class="filter-chip" data-status="В пути">В пути</button>
-    <button class="filter-chip" data-status="Принята">Принята</button>
-    <button class="filter-chip" data-status="Задерживается">Задерживается</button>
-</div>
-
-<div class="chip-row">
-    <button class="filter-chip payment-chip" data-payment="spec-paid">Спец. оплачена</button>
-    <button class="filter-chip payment-chip" data-payment="spec-unpaid">Спец. не оплачена</button>
-    <button class="filter-chip payment-chip" data-payment="tk-paid">ТК оплачена</button>
-    <button class="filter-chip payment-chip" data-payment="tk-unpaid">ТК не оплачена</button>
+<div class="top-actions">
+    <button class="action-btn" onclick="openFiltersModal()">⚙️ Фильтры</button>
+    <button class="action-btn" onclick="openCalendarModal()">📅 Календарь</button>
 </div>
 
 <div class="controls-grid">
@@ -605,7 +764,80 @@ input, select{
 
 </div>
 
+<button class="attention-float" onclick="openAttentionModal()">
+    !
+    <span class="attention-badge" id="attentionBadge">0</span>
+</button>
+
 <div class="toast" id="toast">Скопировано</div>
+
+<!-- МОДАЛКА ФИЛЬТРОВ -->
+
+<div class="modal" id="filtersModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Фильтры</div>
+            <button class="modal-close" onclick="closeModal('filtersModal')">Закрыть</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="filter-section">
+                <div class="filter-section-title">Статусы</div>
+                <div class="chip-row">
+                    <button class="filter-chip" data-status="В пути">В пути</button>
+                    <button class="filter-chip" data-status="Принята">Принята</button>
+                    <button class="filter-chip" data-status="Задерживается">Задерживается</button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-title">Оплаты</div>
+                <div class="chip-row">
+                    <button class="filter-chip" data-payment="spec-paid">Спец. оплачена</button>
+                    <button class="filter-chip" data-payment="spec-unpaid">Спец. не оплачена</button>
+                    <button class="filter-chip" data-payment="tk-paid">ТК оплачена</button>
+                    <button class="filter-chip" data-payment="tk-unpaid">ТК не оплачена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛКА ТРЕБУЮТ ВНИМАНИЯ -->
+
+<div class="modal" id="attentionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Требуют внимания</div>
+            <button class="modal-close" onclick="closeModal('attentionModal')">Закрыть</button>
+        </div>
+
+        <div class="modal-body" id="attentionList"></div>
+    </div>
+</div>
+
+<!-- МОДАЛКА КАЛЕНДАРЯ -->
+
+<div class="modal" id="calendarModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Календарь приходов</div>
+            <button class="modal-close" onclick="closeModal('calendarModal')">Закрыть</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="calendar-controls">
+                <button class="calendar-nav" onclick="changeCalendarMonth(-1)">←</button>
+                <div class="calendar-month" id="calendarMonthTitle"></div>
+                <button class="calendar-nav" onclick="changeCalendarMonth(1)">→</button>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="calendar-specs" id="calendarSpecs"></div>
+        </div>
+    </div>
+</div>
 
 <script>
 
@@ -622,7 +854,7 @@ function initTelegramMiniApp(){
     tg.expand();
 
     try{
-        tg.setHeaderColor("#b91c1c");
+        tg.setHeaderColor("#0f766e");
         tg.setBackgroundColor("#d7d8da");
     } catch(error){
         console.log("Theme color error:", error);
@@ -635,6 +867,14 @@ function initTelegramMiniApp(){
             console.log("Fullscreen error:", error);
         }
     }
+
+    if(tg.disableVerticalSwipes){
+        try{
+            tg.disableVerticalSwipes();
+        } catch(error){
+            console.log("Disable swipes error:", error);
+        }
+    }
 }
 
 window.addEventListener("load", initTelegramMiniApp);
@@ -645,14 +885,39 @@ const SHEET_URL =
 let shipmentsData = [];
 let selectedStatuses = [];
 let selectedPaymentFilters = [];
-let currentView = "list";
 let renderedItems = {};
+
+let calendarDate = new Date();
+calendarDate.setDate(1);
+calendarDate.setHours(0,0,0,0);
 
 function toggleSearch(){
     document
         .getElementById("searchBox")
         .classList
         .toggle("active");
+}
+
+function openModal(id){
+    document.getElementById(id).classList.add("active");
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.remove("active");
+}
+
+function openFiltersModal(){
+    openModal("filtersModal");
+}
+
+function openAttentionModal(){
+    renderAttentionList();
+    openModal("attentionModal");
+}
+
+function openCalendarModal(){
+    renderCalendar();
+    openModal("calendarModal");
 }
 
 function clean(value){
@@ -736,6 +1001,14 @@ function parseDate(value){
     date.setHours(0,0,0,0);
 
     return date;
+}
+
+function formatDateKey(date){
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}.${month}.${year}`;
 }
 
 function todayDate(){
@@ -960,13 +1233,30 @@ function paymentBadge(value){
     return `<span class="pay-badge pay-unpaid">${escapeHtml(text)}</span>`;
 }
 
+function getIssues(item){
+    const issues = [];
+
+    if(isDelayed(item)){
+        issues.push("Статус: задерживается");
+    }
+
+    if(isOverdue(item)){
+        issues.push(`Просрочка: ${Math.abs(diffDaysFromToday(item.arrivalDate))} дн.`);
+    }
+
+    if(!isPaid(item.specPayment)){
+        issues.push("Не оплачена спецификация");
+    }
+
+    if(!isPaid(item.transportPayment)){
+        issues.push("Не оплачена транспортная");
+    }
+
+    return issues;
+}
+
 function isAttention(item){
-    return (
-        isDelayed(item) ||
-        isOverdue(item) ||
-        !isPaid(item.specPayment) ||
-        !isPaid(item.transportPayment)
-    );
+    return getIssues(item).length > 0;
 }
 
 function getDaysLabel(item){
@@ -1058,30 +1348,44 @@ function updateSummary(){
         transportSum.toLocaleString("ru-RU") + " ₽";
 }
 
-function updateAttention(){
+function updateAttentionBadge(){
     const attention = shipmentsData.filter(isAttention);
 
-    const delayed = shipmentsData.filter(isDelayed).length;
-
-    const overdue = shipmentsData.filter(isOverdue).length;
-
-    const specUnpaid = shipmentsData.filter(item =>
-        !isPaid(item.specPayment)
-    ).length;
-
-    const transportUnpaid = shipmentsData.filter(item =>
-        !isPaid(item.transportPayment)
-    ).length;
-
     document
-        .getElementById("attentionCount")
+        .getElementById("attentionBadge")
         .innerText =
         attention.length;
+}
 
-    document
-        .getElementById("attentionDetails")
-        .innerText =
-        `Задерживаются: ${delayed} · Просрочка: ${overdue} · Спец. не оплачено: ${specUnpaid} · ТК не оплачена: ${transportUnpaid}`;
+function renderAttentionList(){
+    const container = document.getElementById("attentionList");
+
+    const attention = shipmentsData.filter(isAttention);
+
+    if(attention.length === 0){
+        container.innerHTML =
+        `<div class="empty">Нет поставок, требующих внимания</div>`;
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    attention.forEach(item => {
+        const issues = getIssues(item);
+
+        container.innerHTML += `
+            <div class="issue-item">
+                <div class="issue-title">
+                    ${escapeHtml(formatSpecTitle(item.spec))}
+                </div>
+
+                <ul class="issue-list">
+                    ${issues.map(issue => `<li>${escapeHtml(issue)}</li>`).join("")}
+                </ul>
+            </div>
+        `;
+    });
 }
 
 function fillTransportFilter(){
@@ -1326,52 +1630,6 @@ function renderList(data){
     });
 }
 
-function renderCalendar(data){
-    const container = document.getElementById("shipments");
-
-    container.innerHTML = "";
-
-    const groups = {};
-
-    data.forEach(item => {
-        const key = item.arrivalDate || "Без даты";
-
-        if(!groups[key]){
-            groups[key] = [];
-        }
-
-        groups[key].push(item);
-    });
-
-    const keys = Object.keys(groups).sort((a,b) => {
-        const da = parseDate(a);
-        const db = parseDate(b);
-
-        if(!da && !db) return a.localeCompare(b, "ru");
-        if(!da) return 1;
-        if(!db) return -1;
-
-        return da - db;
-    });
-
-    let cardCounter = 0;
-
-    keys.forEach(dateKey => {
-        container.innerHTML += `
-            <div class="calendar-group">
-                <div class="calendar-date">
-                    ${escapeHtml(dateKey)}
-                </div>
-            </div>
-        `;
-
-        groups[dateKey].forEach(item => {
-            container.innerHTML += renderCard(item, `cal-${cardCounter}`);
-            cardCounter++;
-        });
-    });
-}
-
 function renderShipments(data){
     const counter = document.getElementById("counter");
 
@@ -1382,7 +1640,7 @@ function renderShipments(data){
     counter.innerText = `Найдено: ${sorted.length}`;
 
     updateSummary();
-    updateAttention();
+    updateAttentionBadge();
 
     if(sorted.length === 0){
         document.getElementById("shipments").innerHTML =
@@ -1391,11 +1649,7 @@ function renderShipments(data){
         return;
     }
 
-    if(currentView === "calendar"){
-        renderCalendar(sorted);
-    } else {
-        renderList(sorted);
-    }
+    renderList(sorted);
 }
 
 function toggleCard(cardId){
@@ -1505,18 +1759,6 @@ function togglePaymentFilter(filter, button){
     applyFilters();
 }
 
-function setView(view, button){
-    currentView = view;
-
-    document
-        .querySelectorAll(".view-chip")
-        .forEach(btn => btn.classList.remove("active"));
-
-    button.classList.add("active");
-
-    applyFilters();
-}
-
 function copyShipment(cardId){
     const item = renderedItems[cardId];
 
@@ -1575,6 +1817,103 @@ function showToast(){
     }, 1500);
 }
 
+/* КАЛЕНДАРЬ */
+
+function changeCalendarMonth(direction){
+    calendarDate.setMonth(calendarDate.getMonth() + direction);
+    renderCalendar();
+}
+
+function renderCalendar(){
+    const title = document.getElementById("calendarMonthTitle");
+    const grid = document.getElementById("calendarGrid");
+    const specs = document.getElementById("calendarSpecs");
+
+    const monthName = calendarDate.toLocaleString("ru-RU", {
+        month:"long",
+        year:"numeric"
+    });
+
+    title.innerText =
+        monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+    grid.innerHTML = "";
+    specs.innerHTML = "";
+
+    const weekdays = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+
+    weekdays.forEach(day => {
+        grid.innerHTML += `<div class="calendar-weekday">${day}</div>`;
+    });
+
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    let startOffset = firstDay.getDay() - 1;
+    if(startOffset < 0){
+        startOffset = 6;
+    }
+
+    for(let i = 0; i < startOffset; i++){
+        grid.innerHTML += `<button class="calendar-day empty-day"></button>`;
+    }
+
+    for(let day = 1; day <= lastDay.getDate(); day++){
+        const date = new Date(year, month, day);
+        date.setHours(0,0,0,0);
+
+        const key = formatDateKey(date);
+
+        const arrivals = shipmentsData.filter(item =>
+            clean(item.arrivalDate) === key
+        );
+
+        const hasArrival = arrivals.length > 0;
+
+        grid.innerHTML += `
+            <button
+                class="calendar-day ${hasArrival ? "has-arrival" : ""}"
+                onclick="selectCalendarDay('${key}')"
+            >
+                ${day}
+            </button>
+        `;
+    }
+}
+
+function selectCalendarDay(dateKey){
+    document
+        .querySelectorAll(".calendar-day")
+        .forEach(day => day.classList.remove("selected"));
+
+    event.target.classList.add("selected");
+
+    const specs = document.getElementById("calendarSpecs");
+
+    const arrivals = shipmentsData.filter(item =>
+        clean(item.arrivalDate) === dateKey
+    );
+
+    if(arrivals.length === 0){
+        specs.innerHTML =
+        `<div class="empty">На эту дату поставок нет</div>`;
+        return;
+    }
+
+    specs.innerHTML = "";
+
+    arrivals.forEach(item => {
+        specs.innerHTML += `
+            <div class="calendar-spec">
+                ${escapeHtml(formatSpecTitle(item.spec))}
+            </div>
+        `;
+    });
+}
+
 document
     .querySelectorAll("[data-status]")
     .forEach(button => {
@@ -1588,14 +1927,6 @@ document
     .forEach(button => {
         button.addEventListener("click", () => {
             togglePaymentFilter(button.dataset.payment, button);
-        });
-    });
-
-document
-    .querySelectorAll("[data-view]")
-    .forEach(button => {
-        button.addEventListener("click", () => {
-            setView(button.dataset.view, button);
         });
     });
 
