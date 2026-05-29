@@ -131,7 +131,7 @@ h1{
     display:block;
 }
 
-input{
+input, select{
     width:100%;
     padding:12px;
     border:1px solid rgba(17,24,39,0.12);
@@ -143,17 +143,56 @@ input{
     outline:none;
 }
 
-/* ФИЛЬТРЫ */
+/* ТРЕБУЮТ ВНИМАНИЯ */
 
-.status-filters{
+.attention-block{
+    margin-bottom:12px;
+    padding:14px;
+    border-radius:18px;
+    background:rgba(254,226,226,0.82);
+    border:1px solid rgba(153,27,27,0.18);
+    box-shadow:0 10px 28px rgba(0,0,0,0.08);
+    backdrop-filter:blur(12px);
+}
+
+.attention-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+}
+
+.attention-title{
+    font-size:15px;
+    font-weight:800;
+    color:#991b1b;
+}
+
+.attention-count{
+    font-size:24px;
+    font-weight:900;
+    color:#991b1b;
+}
+
+.attention-details{
+    margin-top:6px;
+    color:#7f1d1d;
+    font-size:12px;
+    line-height:1.45;
+}
+
+/* ПЕРЕКЛЮЧАТЕЛИ */
+
+.chip-row{
     display:flex;
     gap:8px;
     overflow-x:auto;
     padding-bottom:8px;
-    margin-bottom:12px;
+    margin-bottom:10px;
 }
 
-.filter-chip{
+.filter-chip,
+.view-chip{
     border:none;
     border-radius:999px;
     padding:10px 14px;
@@ -166,9 +205,17 @@ input{
     box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 
-.filter-chip.active{
+.filter-chip.active,
+.view-chip.active{
     background:#111827;
     color:white;
+}
+
+.controls-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:10px;
 }
 
 /* ВЕРХНИЕ ПОКАЗАТЕЛИ */
@@ -214,11 +261,28 @@ input{
 .card{
     background:rgba(255,255,255,0.76);
     border:1px solid rgba(17,24,39,0.12);
+    border-left:7px solid #9ca3af;
     border-radius:16px;
     margin-bottom:10px;
     overflow:hidden;
     backdrop-filter:blur(12px);
     box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card.accepted{
+    border-left-color:#16a34a;
+}
+
+.card.in-transit{
+    border-left-color:#f59e0b;
+}
+
+.card.delayed{
+    border-left-color:#dc2626;
+}
+
+.card.overdue{
+    border-left-color:#7f1d1d;
 }
 
 .card-header{
@@ -236,6 +300,7 @@ input{
 .card-subtitle{
     font-size:13px;
     color:#4b5563;
+    line-height:1.35;
 }
 
 .card-body{
@@ -293,6 +358,11 @@ input{
 .gray{
     background:#e5e7eb;
     color:#374151;
+}
+
+.burgundy{
+    background:#fee2e2;
+    color:#7f1d1d;
 }
 
 /* ОПЛАТЫ */
@@ -362,6 +432,58 @@ input{
     background:#374151;
 }
 
+/* КОПИРОВАНИЕ */
+
+.copy-btn{
+    width:100%;
+    margin-top:14px;
+    border:none;
+    border-radius:12px;
+    padding:11px 12px;
+    background:#0f172a;
+    color:white;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
+    background:#111827;
+    color:white;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:13px;
+    z-index:99;
+    opacity:0;
+    pointer-events:none;
+    transition:0.2s;
+}
+
+.toast.active{
+    opacity:1;
+}
+
+/* КАЛЕНДАРЬ */
+
+.calendar-group{
+    margin-bottom:16px;
+}
+
+.calendar-date{
+    margin:14px 0 10px 0;
+    padding:10px 12px;
+    border-radius:14px;
+    background:rgba(17,24,39,0.82);
+    color:white;
+    font-size:14px;
+    font-weight:bold;
+    backdrop-filter:blur(12px);
+}
+
 .empty{
     color:#6b7280;
     text-align:center;
@@ -383,6 +505,10 @@ input{
 
     .summary-card{
         min-width:170px;
+    }
+
+    .controls-grid{
+        grid-template-columns:1fr;
     }
 
     h1{
@@ -417,10 +543,43 @@ input{
     >
 </div>
 
-<div class="status-filters">
+<div class="attention-block">
+    <div class="attention-top">
+        <div class="attention-title">Требуют внимания:</div>
+        <div class="attention-count" id="attentionCount">0</div>
+    </div>
+    <div class="attention-details" id="attentionDetails"></div>
+</div>
+
+<div class="chip-row">
+    <button class="view-chip active" data-view="list">📋 Список</button>
+    <button class="view-chip" data-view="calendar">📅 Календарь</button>
+</div>
+
+<div class="chip-row">
     <button class="filter-chip" data-status="В пути">В пути</button>
     <button class="filter-chip" data-status="Принята">Принята</button>
     <button class="filter-chip" data-status="Задерживается">Задерживается</button>
+</div>
+
+<div class="chip-row">
+    <button class="filter-chip payment-chip" data-payment="spec-paid">Спец. оплачена</button>
+    <button class="filter-chip payment-chip" data-payment="spec-unpaid">Спец. не оплачена</button>
+    <button class="filter-chip payment-chip" data-payment="tk-paid">ТК оплачена</button>
+    <button class="filter-chip payment-chip" data-payment="tk-unpaid">ТК не оплачена</button>
+</div>
+
+<div class="controls-grid">
+    <select id="sortSelect">
+        <option value="nearest">Сначала ближайшие</option>
+        <option value="newest">Сначала новые</option>
+        <option value="delays">Сначала задержки</option>
+        <option value="unpaid">Сначала неоплаченные</option>
+    </select>
+
+    <select id="transportFilter">
+        <option value="">Все ТК</option>
+    </select>
 </div>
 
 <div class="summary">
@@ -445,6 +604,8 @@ input{
 <div id="shipments"></div>
 
 </div>
+
+<div class="toast" id="toast">Скопировано</div>
 
 <script>
 
@@ -482,8 +643,10 @@ const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
 
 let shipmentsData = [];
-
 let selectedStatuses = [];
+let selectedPaymentFilters = [];
+let currentView = "list";
+let renderedItems = {};
 
 function toggleSearch(){
     document
@@ -502,6 +665,19 @@ function clean(value){
 
 function normalize(value){
     return clean(value).toLowerCase();
+}
+
+function escapeHtml(value){
+    return clean(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function escapeAttr(value){
+    return escapeHtml(value);
 }
 
 function getField(obj, names){
@@ -537,6 +713,47 @@ function parseNumber(value){
             .replace(",", ".")
             .replace(/[^\d.]/g, "")
     ) || 0;
+}
+
+function parseDate(value){
+    const text = clean(value);
+
+    const match = text.match(/(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{2,4})/);
+
+    if(!match){
+        return null;
+    }
+
+    let day = Number(match[1]);
+    let month = Number(match[2]) - 1;
+    let year = Number(match[3]);
+
+    if(year < 100){
+        year += 2000;
+    }
+
+    const date = new Date(year, month, day);
+    date.setHours(0,0,0,0);
+
+    return date;
+}
+
+function todayDate(){
+    const date = new Date();
+    date.setHours(0,0,0,0);
+    return date;
+}
+
+function diffDaysFromToday(value){
+    const date = parseDate(value);
+
+    if(!date){
+        return null;
+    }
+
+    const diff = date.getTime() - todayDate().getTime();
+
+    return Math.round(diff / 86400000);
 }
 
 function parseCSV(text){
@@ -672,6 +889,7 @@ async function loadShipments(){
         })
         .filter(item => item.spec);
 
+    fillTransportFilter();
     applyFilters();
 }
 
@@ -702,6 +920,24 @@ function isInTransitStatus(status){
     );
 }
 
+function isAccepted(item){
+    return normalize(item.status) === "принята";
+}
+
+function isDelayed(item){
+    return normalize(item.status) === "задерживается";
+}
+
+function isOverdue(item){
+    const days = diffDaysFromToday(item.arrivalDate);
+
+    return (
+        days !== null &&
+        days < 0 &&
+        !isAccepted(item)
+    );
+}
+
 function isPaid(value){
     const v = normalize(value);
 
@@ -718,10 +954,79 @@ function paymentBadge(value){
     const text = clean(value) || "Не оплачено";
 
     if(isPaid(text)){
-        return `<span class="pay-badge pay-paid">${text}</span>`;
+        return `<span class="pay-badge pay-paid">${escapeHtml(text)}</span>`;
     }
 
-    return `<span class="pay-badge pay-unpaid">${text}</span>`;
+    return `<span class="pay-badge pay-unpaid">${escapeHtml(text)}</span>`;
+}
+
+function isAttention(item){
+    return (
+        isDelayed(item) ||
+        isOverdue(item) ||
+        !isPaid(item.specPayment) ||
+        !isPaid(item.transportPayment)
+    );
+}
+
+function getDaysLabel(item){
+    const days = diffDaysFromToday(item.arrivalDate);
+
+    if(days === null){
+        return "срок не указан";
+    }
+
+    if(isAccepted(item)){
+        return "принята";
+    }
+
+    if(days > 0){
+        return `осталось ${days} дн.`;
+    }
+
+    if(days === 0){
+        return "сегодня";
+    }
+
+    return `просрочка ${Math.abs(days)} дн.`;
+}
+
+function getCardStateClass(item){
+    if(isOverdue(item)){
+        return "overdue";
+    }
+
+    if(isDelayed(item)){
+        return "delayed";
+    }
+
+    if(normalize(item.status) === "в пути"){
+        return "in-transit";
+    }
+
+    if(isAccepted(item)){
+        return "accepted";
+    }
+
+    return "";
+}
+
+function getStatusBadgeClass(item){
+    if(isOverdue(item)){
+        return "burgundy";
+    }
+
+    return getStatusClass(item.status);
+}
+
+function formatSpecTitle(spec){
+    const value = clean(spec);
+
+    if(/^спецификация/i.test(value)){
+        return value.replace(/спецификация\s*№?\s*/i, "Спецификация №");
+    }
+
+    return `Спецификация №${value}`;
 }
 
 function updateSummary(){
@@ -753,6 +1058,58 @@ function updateSummary(){
         transportSum.toLocaleString("ru-RU") + " ₽";
 }
 
+function updateAttention(){
+    const attention = shipmentsData.filter(isAttention);
+
+    const delayed = shipmentsData.filter(isDelayed).length;
+
+    const overdue = shipmentsData.filter(isOverdue).length;
+
+    const specUnpaid = shipmentsData.filter(item =>
+        !isPaid(item.specPayment)
+    ).length;
+
+    const transportUnpaid = shipmentsData.filter(item =>
+        !isPaid(item.transportPayment)
+    ).length;
+
+    document
+        .getElementById("attentionCount")
+        .innerText =
+        attention.length;
+
+    document
+        .getElementById("attentionDetails")
+        .innerText =
+        `Задерживаются: ${delayed} · Просрочка: ${overdue} · Спец. не оплачено: ${specUnpaid} · ТК не оплачена: ${transportUnpaid}`;
+}
+
+function fillTransportFilter(){
+    const select = document.getElementById("transportFilter");
+
+    const currentValue = select.value;
+
+    const transports = Array.from(
+        new Set(
+            shipmentsData
+                .map(item => clean(item.transport))
+                .filter(Boolean)
+        )
+    ).sort((a,b) => a.localeCompare(b, "ru"));
+
+    select.innerHTML = `<option value="">Все ТК</option>`;
+
+    transports.forEach(transport => {
+        select.innerHTML += `
+            <option value="${escapeAttr(transport)}">
+                ${escapeHtml(transport)}
+            </option>
+        `;
+    });
+
+    select.value = currentValue;
+}
+
 function documentsBlock(item){
     if(!item.specPdf && !item.invoicePdf && !item.transportPdf){
         return "";
@@ -766,7 +1123,7 @@ function documentsBlock(item){
 
                 ${item.specPdf ? `
                     <a
-                        href="${item.specPdf}"
+                        href="${escapeAttr(item.specPdf)}"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="doc-btn doc-spec"
@@ -777,7 +1134,7 @@ function documentsBlock(item){
 
                 ${item.invoicePdf ? `
                     <a
-                        href="${item.invoicePdf}"
+                        href="${escapeAttr(item.invoicePdf)}"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="doc-btn doc-invoice"
@@ -788,7 +1145,7 @@ function documentsBlock(item){
 
                 ${item.transportPdf ? `
                     <a
-                        href="${item.transportPdf}"
+                        href="${escapeAttr(item.transportPdf)}"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="doc-btn doc-transport"
@@ -802,115 +1159,269 @@ function documentsBlock(item){
     `;
 }
 
-function renderShipments(data){
-    const container = document.getElementById("shipments");
+function renderCard(item, cardId){
+    renderedItems[cardId] = item;
 
-    const counter = document.getElementById("counter");
+    const statusBadgeClass = getStatusBadgeClass(item);
+
+    const cardStateClass = getCardStateClass(item);
+
+    const specTitle = formatSpecTitle(item.spec);
+
+    const daysLabel = getDaysLabel(item);
+
+    const badgeText = isOverdue(item)
+        ? "Просрочка"
+        : item.status;
+
+    return `
+        <div class="card ${cardStateClass}" id="card-${cardId}">
+            <div
+                class="card-header"
+                onclick="toggleCard('${cardId}')"
+            >
+                <div class="card-title">
+                    ${escapeHtml(specTitle)}
+                </div>
+
+                <div class="card-subtitle">
+                    ${escapeHtml(item.status)} · ${escapeHtml(item.arrivalDate)} · ${escapeHtml(daysLabel)}
+                </div>
+
+                <div class="status ${statusBadgeClass}">
+                    ${escapeHtml(badgeText)}
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+                    <span>Товар</span>
+                    <b>${escapeHtml(item.item || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Кол-во</span>
+                    <b>${escapeHtml(item.qty || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Вес</span>
+                    <b>${escapeHtml(item.weight || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>ТК</span>
+                    <b>${escapeHtml(item.transport || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Сумма транспорта</span>
+                    <b>${escapeHtml(item.transportSum || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Дата готовности</span>
+                    <b>${escapeHtml(item.readyDate || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Дата прихода/срок</span>
+                    <b>${escapeHtml(item.arrivalDate || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Дней до прихода</span>
+                    <b>${escapeHtml(daysLabel)}</b>
+                </div>
+
+                <div class="row">
+                    <span>Цена за кг</span>
+                    <b>${escapeHtml(item.priceKg || "-")}</b>
+                </div>
+
+                <div class="row">
+                    <span>Оплата по спецификации</span>
+                    <b>${paymentBadge(item.specPayment)}</b>
+                </div>
+
+                <div class="row">
+                    <span>Оплата за транспорт</span>
+                    <b>${paymentBadge(item.transportPayment)}</b>
+                </div>
+
+                ${documentsBlock(item)}
+
+                <button
+                    class="copy-btn"
+                    onclick="copyShipment('${cardId}')"
+                >
+                    📋 Скопировать карточку
+                </button>
+
+            </div>
+        </div>
+    `;
+}
+
+function sortData(data){
+    const sortValue = document.getElementById("sortSelect").value;
+
+    const sorted = [...data];
+
+    if(sortValue === "nearest"){
+        sorted.sort((a,b) => {
+            const da = parseDate(a.arrivalDate);
+            const db = parseDate(b.arrivalDate);
+
+            if(!da && !db) return 0;
+            if(!da) return 1;
+            if(!db) return -1;
+
+            return da - db;
+        });
+    }
+
+    if(sortValue === "newest"){
+        sorted.sort((a,b) => {
+            const da = parseDate(a.readyDate) || parseDate(a.arrivalDate);
+            const db = parseDate(b.readyDate) || parseDate(b.arrivalDate);
+
+            if(!da && !db) return 0;
+            if(!da) return 1;
+            if(!db) return -1;
+
+            return db - da;
+        });
+    }
+
+    if(sortValue === "delays"){
+        sorted.sort((a,b) => {
+            const av = (isDelayed(a) ? 2 : 0) + (isOverdue(a) ? 3 : 0);
+            const bv = (isDelayed(b) ? 2 : 0) + (isOverdue(b) ? 3 : 0);
+
+            return bv - av;
+        });
+    }
+
+    if(sortValue === "unpaid"){
+        sorted.sort((a,b) => {
+            const av = (!isPaid(a.specPayment) ? 1 : 0) + (!isPaid(a.transportPayment) ? 1 : 0);
+            const bv = (!isPaid(b.specPayment) ? 1 : 0) + (!isPaid(b.transportPayment) ? 1 : 0);
+
+            return bv - av;
+        });
+    }
+
+    return sorted;
+}
+
+function renderList(data){
+    const container = document.getElementById("shipments");
 
     container.innerHTML = "";
 
-    counter.innerText = `Найдено: ${data.length}`;
+    data.forEach((item, index) => {
+        container.innerHTML += renderCard(item, `list-${index}`);
+    });
+}
+
+function renderCalendar(data){
+    const container = document.getElementById("shipments");
+
+    container.innerHTML = "";
+
+    const groups = {};
+
+    data.forEach(item => {
+        const key = item.arrivalDate || "Без даты";
+
+        if(!groups[key]){
+            groups[key] = [];
+        }
+
+        groups[key].push(item);
+    });
+
+    const keys = Object.keys(groups).sort((a,b) => {
+        const da = parseDate(a);
+        const db = parseDate(b);
+
+        if(!da && !db) return a.localeCompare(b, "ru");
+        if(!da) return 1;
+        if(!db) return -1;
+
+        return da - db;
+    });
+
+    let cardCounter = 0;
+
+    keys.forEach(dateKey => {
+        container.innerHTML += `
+            <div class="calendar-group">
+                <div class="calendar-date">
+                    ${escapeHtml(dateKey)}
+                </div>
+            </div>
+        `;
+
+        groups[dateKey].forEach(item => {
+            container.innerHTML += renderCard(item, `cal-${cardCounter}`);
+            cardCounter++;
+        });
+    });
+}
+
+function renderShipments(data){
+    const counter = document.getElementById("counter");
+
+    const sorted = sortData(data);
+
+    renderedItems = {};
+
+    counter.innerText = `Найдено: ${sorted.length}`;
 
     updateSummary();
+    updateAttention();
 
-    if(data.length === 0){
-        container.innerHTML =
+    if(sorted.length === 0){
+        document.getElementById("shipments").innerHTML =
         `<div class="empty">Ничего не найдено</div>`;
 
         return;
     }
 
-    data.forEach((item, index) => {
-        const statusClass = getStatusClass(item.status);
-
-        const specTitle = item.spec.replace(
-            "Спецификация ",
-            "Спецификация №"
-        );
-
-        container.innerHTML += `
-            <div class="card" id="card-${index}">
-                <div
-                    class="card-header"
-                    onclick="toggleCard(${index})"
-                >
-                    <div class="card-title">
-                        ${specTitle}
-                    </div>
-
-                    <div class="card-subtitle">
-                        ${item.status} · ${item.arrivalDate}
-                    </div>
-
-                    <div class="status ${statusClass}">
-                        ${item.status}
-                    </div>
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row">
-                        <span>Товар</span>
-                        <b>${item.item || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Кол-во</span>
-                        <b>${item.qty || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Вес</span>
-                        <b>${item.weight || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>ТК</span>
-                        <b>${item.transport || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Сумма транспорта</span>
-                        <b>${item.transportSum || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Дата готовности</span>
-                        <b>${item.readyDate || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Дата прихода/срок</span>
-                        <b>${item.arrivalDate || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Цена за кг</span>
-                        <b>${item.priceKg || "-"}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Оплата по спецификации</span>
-                        <b>${paymentBadge(item.specPayment)}</b>
-                    </div>
-
-                    <div class="row">
-                        <span>Оплата за транспорт</span>
-                        <b>${paymentBadge(item.transportPayment)}</b>
-                    </div>
-
-                    ${documentsBlock(item)}
-
-                </div>
-            </div>
-        `;
-    });
+    if(currentView === "calendar"){
+        renderCalendar(sorted);
+    } else {
+        renderList(sorted);
+    }
 }
 
-function toggleCard(index){
-    const card = document.getElementById(`card-${index}`);
+function toggleCard(cardId){
+    const card = document.getElementById(`card-${cardId}`);
 
     card.classList.toggle("open");
+}
+
+function getPaymentMatch(item, filter){
+    if(filter === "spec-paid"){
+        return isPaid(item.specPayment);
+    }
+
+    if(filter === "spec-unpaid"){
+        return !isPaid(item.specPayment);
+    }
+
+    if(filter === "tk-paid"){
+        return isPaid(item.transportPayment);
+    }
+
+    if(filter === "tk-unpaid"){
+        return !isPaid(item.transportPayment);
+    }
+
+    return false;
 }
 
 function applyFilters(){
@@ -919,6 +1430,12 @@ function applyFilters(){
         .getElementById("search")
         .value
         .toLowerCase()
+        .trim();
+
+    const transportValue =
+    document
+        .getElementById("transportFilter")
+        .value
         .trim();
 
     let filtered = shipmentsData;
@@ -934,6 +1451,20 @@ function applyFilters(){
     if(selectedStatuses.length > 0){
         filtered = filtered.filter(item =>
             selectedStatuses.includes(item.status)
+        );
+    }
+
+    if(selectedPaymentFilters.length > 0){
+        filtered = filtered.filter(item =>
+            selectedPaymentFilters.some(filter =>
+                getPaymentMatch(item, filter)
+            )
+        );
+    }
+
+    if(transportValue){
+        filtered = filtered.filter(item =>
+            item.transport === transportValue
         );
     }
 
@@ -957,8 +1488,95 @@ function toggleStatus(status, button){
     applyFilters();
 }
 
+function togglePaymentFilter(filter, button){
+    if(selectedPaymentFilters.includes(filter)){
+        selectedPaymentFilters =
+        selectedPaymentFilters.filter(f => f !== filter);
+
+        button.classList.remove("active");
+    }
+
+    else{
+        selectedPaymentFilters.push(filter);
+
+        button.classList.add("active");
+    }
+
+    applyFilters();
+}
+
+function setView(view, button){
+    currentView = view;
+
+    document
+        .querySelectorAll(".view-chip")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    applyFilters();
+}
+
+function copyShipment(cardId){
+    const item = renderedItems[cardId];
+
+    if(!item){
+        return;
+    }
+
+    const specTitle = formatSpecTitle(item.spec);
+
+    const text = [
+        specTitle,
+        `Товар: ${item.item || "-"}`,
+        `Статус: ${item.status || "-"}`,
+        `ТК: ${item.transport || "-"}`,
+        `Дата прихода: ${item.arrivalDate || "-"}`,
+        `Дней до прихода: ${getDaysLabel(item)}`,
+        `Кол-во: ${item.qty || "-"}`,
+        `Вес: ${item.weight || "-"}`,
+        `Сумма транспорта: ${item.transportSum || "-"}`,
+        `Оплата по спецификации: ${item.specPayment || "Не оплачено"}`,
+        `Оплата за транспорт: ${item.transportPayment || "Не оплачено"}`
+    ].join("\n");
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text)
+            .then(showToast)
+            .catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
+
+function fallbackCopy(text){
+    const textarea = document.createElement("textarea");
+
+    textarea.value = text;
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    document.execCommand("copy");
+
+    document.body.removeChild(textarea);
+
+    showToast();
+}
+
+function showToast(){
+    const toast = document.getElementById("toast");
+
+    toast.classList.add("active");
+
+    setTimeout(() => {
+        toast.classList.remove("active");
+    }, 1500);
+}
+
 document
-    .querySelectorAll(".filter-chip")
+    .querySelectorAll("[data-status]")
     .forEach(button => {
         button.addEventListener("click", () => {
             toggleStatus(button.dataset.status, button);
@@ -966,8 +1584,32 @@ document
     });
 
 document
+    .querySelectorAll("[data-payment]")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            togglePaymentFilter(button.dataset.payment, button);
+        });
+    });
+
+document
+    .querySelectorAll("[data-view]")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            setView(button.dataset.view, button);
+        });
+    });
+
+document
     .getElementById("search")
     .addEventListener("input", applyFilters);
+
+document
+    .getElementById("sortSelect")
+    .addEventListener("change", applyFilters);
+
+document
+    .getElementById("transportFilter")
+    .addEventListener("change", applyFilters);
 
 loadShipments();
 
