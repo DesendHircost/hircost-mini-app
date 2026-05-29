@@ -29,6 +29,30 @@ body.tg-mode{
     padding-top:calc(env(safe-area-inset-top, 0px) + 104px);
 }
 
+/* ОБЩАЯ ПЛАВНОСТЬ КНОПОК */
+
+button,
+.doc-btn,
+.copy-btn,
+.action-btn,
+.filter-chip,
+.round-btn{
+    transition:
+        transform 0.12s ease,
+        background 0.18s ease,
+        opacity 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+button:active,
+.doc-btn:active,
+.copy-btn:active,
+.action-btn:active,
+.filter-chip:active,
+.round-btn:active{
+    transform:scale(0.97);
+}
+
 /* ПЛАСТИНКА */
 
 .bg-disc{
@@ -128,13 +152,26 @@ h1{
     box-shadow:0 8px 24px rgba(0,0,0,0.16);
 }
 
+/* ПОИСК */
+
 .search-box{
-    display:none;
-    margin-bottom:10px;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    margin-bottom:0;
+    transform:translateY(-4px);
+    transition:
+        max-height 0.2s ease,
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        margin-bottom 0.18s ease;
 }
 
 .search-box.active{
-    display:block;
+    max-height:76px;
+    opacity:1;
+    margin-bottom:10px;
+    transform:translateY(0);
 }
 
 input, select{
@@ -228,6 +265,9 @@ input, select{
     overflow:hidden;
     backdrop-filter:blur(12px);
     box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    transition:
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 }
 
 .card.accepted{
@@ -265,13 +305,24 @@ input, select{
 }
 
 .card-body{
-    display:none;
-    padding:0 14px 14px 14px;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    padding:0 14px;
     border-top:1px solid rgba(17,24,39,0.08);
+    transform:translateY(-4px);
+    transition:
+        max-height 0.22s ease,
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        padding 0.18s ease;
 }
 
 .card.open .card-body{
-    display:block;
+    max-height:1200px;
+    opacity:1;
+    padding:0 14px 14px 14px;
+    transform:translateY(0);
 }
 
 .row{
@@ -448,15 +499,22 @@ input, select{
     position:fixed;
     inset:0;
     z-index:80;
-    background:rgba(17,24,39,0.55);
-    display:none;
+    background:rgba(17,24,39,0);
+    display:flex;
     align-items:flex-end;
     justify-content:center;
     padding:12px;
+    opacity:0;
+    pointer-events:none;
+    transition:
+        opacity 0.2s ease,
+        background 0.2s ease;
 }
 
 .modal.active{
-    display:flex;
+    opacity:1;
+    pointer-events:auto;
+    background:rgba(17,24,39,0.55);
 }
 
 .modal-content{
@@ -468,6 +526,12 @@ input, select{
     display:flex;
     flex-direction:column;
     box-shadow:0 24px 80px rgba(0,0,0,0.30);
+    transform:translateY(18px);
+    transition:transform 0.22s ease;
+}
+
+.modal.active .modal-content{
+    transform:translateY(0);
 }
 
 .modal-header{
@@ -1876,7 +1940,7 @@ function renderCalendar(){
         grid.innerHTML += `
             <button
                 class="calendar-day ${hasArrival ? "has-arrival" : ""}"
-                onclick="selectCalendarDay('${key}')"
+                onclick="selectCalendarDay('${key}', event)"
             >
                 ${day}
             </button>
@@ -1884,7 +1948,7 @@ function renderCalendar(){
     }
 }
 
-function selectCalendarDay(dateKey){
+function selectCalendarDay(dateKey, event){
     document
         .querySelectorAll(".calendar-day")
         .forEach(day => day.classList.remove("selected"));
