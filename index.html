@@ -123,6 +123,38 @@ button:active,
     border:1px solid rgba(255,255,255,0.20);
     backdrop-filter:blur(14px);
     box-shadow:0 12px 34px rgba(0,0,0,0.18);
+    touch-action:pan-y;
+    user-select:none;
+}
+
+.header-title-block{
+    min-width:0;
+}
+
+.brand-switcher{
+    display:flex;
+    gap:4px;
+    margin-top:7px;
+    padding:3px;
+    width:max-content;
+    border-radius:10px;
+    background:rgba(255,255,255,0.14);
+}
+
+.brand-tab{
+    border:none;
+    border-radius:7px;
+    padding:5px 9px;
+    background:transparent;
+    color:rgba(255,255,255,0.68);
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.brand-tab.active{
+    background:rgba(255,255,255,0.94);
+    color:#0f766e;
 }
 
 h1{
@@ -214,6 +246,36 @@ input, select{
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-bottom:10px;
+}
+
+.main-section-switcher{
+    display:flex;
+    gap:4px;
+    width:max-content;
+    margin:0 0 12px;
+    padding:3px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.58);
+}
+
+.main-section-tab{
+    border:none;
+    border-radius:9px;
+    padding:8px 12px;
+    background:transparent;
+    color:#64748b;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.main-section-tab.active{
+    background:#0f766e;
+    color:white;
+}
+
+.hidden{
+    display:none !important;
 }
 
 /* ВЕРХНИЕ ПОКАЗАТЕЛИ */
@@ -563,6 +625,137 @@ input, select{
     overflow:auto;
 }
 
+/* ФИНАНСЫ */
+
+.finance-summary{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.finance-summary-card,
+.finance-card{
+    background:rgba(255,255,255,0.76);
+    border:1px solid rgba(17,24,39,0.12);
+    border-radius:16px;
+    padding:13px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.07);
+}
+
+.finance-summary-card span{
+    display:block;
+    min-height:30px;
+    color:#6b7280;
+    font-size:12px;
+    line-height:1.3;
+}
+
+.finance-summary-card b{
+    display:block;
+    margin-top:5px;
+    color:#111827;
+    font-size:18px;
+}
+
+.finance-period{
+    margin:-2px 0 12px;
+    color:#4b5563;
+    font-size:12px;
+}
+
+.finance-section{
+    margin-top:16px;
+}
+
+.finance-section-title{
+    margin:0 0 8px;
+    color:#111827;
+    font-size:16px;
+}
+
+.finance-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:10px;
+}
+
+.finance-card-title{
+    margin-bottom:9px;
+    color:#0f766e;
+    font-size:15px;
+    font-weight:800;
+}
+
+.finance-metric{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:6px 0;
+    border-bottom:1px solid rgba(17,24,39,0.07);
+    font-size:13px;
+}
+
+.finance-metric:last-child{
+    border-bottom:none;
+}
+
+.finance-metric span{
+    color:#6b7280;
+}
+
+.finance-metric b{
+    color:#111827;
+    text-align:right;
+}
+
+.finance-gate-content{
+    max-width:360px;
+}
+
+.finance-pin-display{
+    min-height:44px;
+    margin-bottom:10px;
+    color:#0f766e;
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:0;
+    text-align:center;
+}
+
+.finance-pin-error{
+    min-height:20px;
+    margin-bottom:8px;
+    color:#b91c1c;
+    font-size:13px;
+    font-weight:700;
+    text-align:center;
+}
+
+.finance-numpad{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+}
+
+.finance-key{
+    min-height:52px;
+    border:none;
+    border-radius:12px;
+    background:#e5e7eb;
+    color:#111827;
+    font-size:18px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.finance-key.confirm{
+    background:#0f766e;
+    color:white;
+    font-size:14px;
+}
+
 /* ФИЛЬТРЫ В МОДАЛКЕ */
 
 .filter-section{
@@ -772,12 +965,25 @@ input, select{
 <div class="wrapper">
 
 <div class="header">
-    <h1>Hircost поставки</h1>
+    <div class="header-title-block">
+        <h1 id="brandTitle">Hircost поставки</h1>
+        <div class="brand-switcher">
+            <button class="brand-tab active" data-brand="hircost">Hircost</button>
+            <button class="brand-tab" data-brand="lancet">Lancet</button>
+        </div>
+    </div>
 
     <div class="header-actions">
         <button class="round-btn" onclick="toggleSearch()">🔎</button>
     </div>
 </div>
+
+<div class="main-section-switcher" id="mainSectionSwitcher">
+    <button class="main-section-tab active" data-section="shipments">Поставки</button>
+    <button class="main-section-tab" data-section="finance">Финансы</button>
+</div>
+
+<div id="shipmentsSection">
 
 <div class="search-box" id="searchBox">
     <input
@@ -828,7 +1034,15 @@ input, select{
 
 </div>
 
-<button class="attention-float" onclick="openAttentionModal()">
+<div id="financeSection" class="hidden">
+    <div id="financeContent">
+        <div class="empty">Загрузка бюджета логистики...</div>
+    </div>
+</div>
+
+</div>
+
+<button class="attention-float" id="attentionButton" onclick="openAttentionModal()">
     !
     <span class="attention-badge" id="attentionBadge">0</span>
 </button>
@@ -862,6 +1076,37 @@ input, select{
                     <button class="filter-chip" data-payment="tk-paid">ТК оплачена</button>
                     <button class="filter-chip" data-payment="tk-unpaid">ТК не оплачена</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛКА ДОСТУПА К ФИНАНСАМ -->
+
+<div class="modal" id="financeGateModal">
+    <div class="modal-content finance-gate-content">
+        <div class="modal-header">
+            <div class="modal-title">Доступ к финансам</div>
+            <button class="modal-close" onclick="closeModal('financeGateModal')">Закрыть</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="finance-pin-display" id="financePinDisplay">○ ○ ○ ○</div>
+            <div class="finance-pin-error" id="financePinError"></div>
+
+            <div class="finance-numpad">
+                <button class="finance-key" onclick="appendFinanceDigit('1')">1</button>
+                <button class="finance-key" onclick="appendFinanceDigit('2')">2</button>
+                <button class="finance-key" onclick="appendFinanceDigit('3')">3</button>
+                <button class="finance-key" onclick="appendFinanceDigit('4')">4</button>
+                <button class="finance-key" onclick="appendFinanceDigit('5')">5</button>
+                <button class="finance-key" onclick="appendFinanceDigit('6')">6</button>
+                <button class="finance-key" onclick="appendFinanceDigit('7')">7</button>
+                <button class="finance-key" onclick="appendFinanceDigit('8')">8</button>
+                <button class="finance-key" onclick="appendFinanceDigit('9')">9</button>
+                <button class="finance-key" onclick="removeFinanceDigit()">←</button>
+                <button class="finance-key" onclick="appendFinanceDigit('0')">0</button>
+                <button class="finance-key confirm" onclick="submitFinancePassword()">OK</button>
             </div>
         </div>
     </div>
@@ -943,13 +1188,35 @@ function initTelegramMiniApp(){
 
 window.addEventListener("load", initTelegramMiniApp);
 
-const SHEET_URL =
-"https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320";
+const SHEETS = {
+    hircost: {
+        title: "Hircost поставки",
+        emptyText: "Нет данных по Hircost",
+        url: "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=1362126320"
+    },
+    lancet: {
+        title: "Lancet поставки",
+        emptyText: "Нет данных по Lancet",
+        url: "https://docs.google.com/spreadsheets/d/1mmW-HwveJCRQFIFCEHjj7mfJ2-2WqwvEaDokI4VQFQs/export?format=csv&gid=995071707"
+    }
+};
 
+const FINANCE_URL =
+"https://docs.google.com/spreadsheets/d/1DtVUhtB-tPu1TJehiAwe9Nz06wqsgg_4QEOEmi959_8/export?format=csv&gid=694723971";
+const FINANCE_PASSWORD = "7415";
+
+let activeBrand = "hircost";
+let activeMainSection = "shipments";
 let shipmentsData = [];
 let selectedStatuses = [];
 let selectedPaymentFilters = [];
 let renderedItems = {};
+let emptyStateMessage = "Ничего не найдено";
+let loadRequestId = 0;
+let financeUnlocked = false;
+let financePasswordInput = "";
+let financeData = null;
+let financeLoading = false;
 
 let calendarDate = new Date();
 calendarDate.setDate(1);
@@ -960,6 +1227,95 @@ function toggleSearch(){
         .getElementById("searchBox")
         .classList
         .toggle("active");
+}
+
+function getCurrentSheetUrl(){
+    return SHEETS[activeBrand].url;
+}
+
+function updateBrandUI(){
+    document.getElementById("brandTitle").innerText =
+        SHEETS[activeBrand].title;
+
+    document.querySelectorAll(".brand-tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.brand === activeBrand);
+    });
+
+    document
+        .getElementById("mainSectionSwitcher")
+        .classList.toggle("hidden", activeBrand !== "hircost");
+}
+
+function updateMainSectionUI(){
+    const showFinance =
+        activeBrand === "hircost" && activeMainSection === "finance";
+
+    document
+        .getElementById("shipmentsSection")
+        .classList.toggle("hidden", showFinance);
+
+    document
+        .getElementById("financeSection")
+        .classList.toggle("hidden", !showFinance);
+
+    document
+        .getElementById("attentionButton")
+        .classList.toggle("hidden", showFinance);
+
+    document.querySelectorAll(".main-section-tab").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.section === activeMainSection
+        );
+    });
+}
+
+function switchMainSection(section){
+    if(section === "finance"){
+        if(activeBrand !== "hircost"){
+            return;
+        }
+
+        if(!financeUnlocked){
+            openFinanceGate();
+            return;
+        }
+    }
+
+    activeMainSection = section === "finance" ? "finance" : "shipments";
+    updateMainSectionUI();
+
+    if(activeMainSection === "finance"){
+        loadFinanceData();
+    }
+}
+
+function resetBrandFilters(){
+    selectedStatuses = [];
+    selectedPaymentFilters = [];
+
+    document.getElementById("search").value = "";
+    document.getElementById("transportFilter").value = "";
+
+    document
+        .querySelectorAll("[data-status], [data-payment]")
+        .forEach(button => button.classList.remove("active"));
+}
+
+function switchBrand(brand){
+    if(!SHEETS[brand] || brand === activeBrand){
+        return;
+    }
+
+    activeBrand = brand;
+
+    if(activeBrand !== "hircost"){
+        switchMainSection("shipments");
+    }
+
+    resetBrandFilters();
+    updateBrandUI();
+    loadShipments();
 }
 
 function openModal(id){
@@ -1140,16 +1496,363 @@ function parseCSV(text){
     return rows;
 }
 
+function openFinanceGate(){
+    financePasswordInput = "";
+    document.getElementById("financePinError").innerText = "";
+    updateFinancePinDisplay();
+    openModal("financeGateModal");
+}
+
+function updateFinancePinDisplay(){
+    const symbols = [];
+
+    for(let i = 0; i < 4; i++){
+        symbols.push(i < financePasswordInput.length ? "●" : "○");
+    }
+
+    document.getElementById("financePinDisplay").innerText =
+        symbols.join(" ");
+}
+
+function appendFinanceDigit(digit){
+    if(financePasswordInput.length >= 4){
+        return;
+    }
+
+    financePasswordInput += digit;
+    document.getElementById("financePinError").innerText = "";
+    updateFinancePinDisplay();
+}
+
+function removeFinanceDigit(){
+    financePasswordInput = financePasswordInput.slice(0, -1);
+    document.getElementById("financePinError").innerText = "";
+    updateFinancePinDisplay();
+}
+
+function submitFinancePassword(){
+    if(financePasswordInput !== FINANCE_PASSWORD){
+        financePasswordInput = "";
+        document.getElementById("financePinError").innerText =
+            "Неверный пароль";
+        updateFinancePinDisplay();
+        return;
+    }
+
+    financeUnlocked = true;
+    financePasswordInput = "";
+    closeModal("financeGateModal");
+    switchMainSection("finance");
+}
+
+function findFinanceRow(rows, label){
+    const target = normalize(label);
+
+    return rows.findIndex(row =>
+        normalize(row[0]).includes(target)
+    );
+}
+
+function parseFinanceSection(rows, title){
+    const sectionIndex = findFinanceRow(rows, title);
+
+    if(sectionIndex < 0 || !rows[sectionIndex + 1]){
+        return [];
+    }
+
+    const headers = rows[sectionIndex + 1].map(clean);
+    const result = [];
+
+    for(let i = sectionIndex + 2; i < rows.length; i++){
+        const row = rows[i];
+
+        if(!row.some(cell => clean(cell))){
+            break;
+        }
+
+        const item = {};
+
+        headers.forEach((header, index) => {
+            if(header){
+                item[header] = clean(row[index]);
+            }
+        });
+
+        if(Object.values(item).some(Boolean)){
+            result.push(item);
+        }
+    }
+
+    return result;
+}
+
+function parseFinanceReport(rows){
+    const totalsIndex = findFinanceRow(rows, "К оплате / в пути");
+    const totalHeaders = totalsIndex >= 0 ? rows[totalsIndex] : [];
+    const totalValues = totalsIndex >= 0 ? (rows[totalsIndex + 1] || []) : [];
+    const totals = {};
+
+    totalHeaders.forEach((header, index) => {
+        if(clean(header)){
+            totals[clean(header)] = clean(totalValues[index]);
+        }
+    });
+
+    const periodIndex = findFinanceRow(rows, "Период");
+    const periodRow = periodIndex >= 0 ? rows[periodIndex] : [];
+    const updatedIndex = periodRow.findIndex(cell => normalize(cell) === "обновлено");
+
+    const dynamics = parseFinanceSection(rows, "Динамика по месяцам");
+    const routes = parseFinanceSection(rows, "Расходы по маршрутам");
+    const carriers = parseFinanceSection(
+        rows,
+        "Средняя цена за кг по транспортным компаниям"
+    );
+
+    return {
+        period: clean(periodRow[1]),
+        updated: updatedIndex >= 0 ? clean(periodRow[updatedIndex + 1]) : "",
+        totals,
+        dynamics,
+        routes,
+        carriers,
+        months: dynamics.map(item => clean(item["Месяц"])).filter(Boolean)
+    };
+}
+
+function financeValue(value){
+    return clean(value) || "—";
+}
+
+function renderFinanceMetrics(metrics){
+    return metrics.map(([label, value]) => `
+        <div class="finance-metric">
+            <span>${escapeHtml(label)}</span>
+            <b>${escapeHtml(financeValue(value))}</b>
+        </div>
+    `).join("");
+}
+
+function renderFinanceDashboard(){
+    const container = document.getElementById("financeContent");
+
+    if(!financeData){
+        container.innerHTML =
+            `<div class="empty">Не удалось загрузить бюджет логистики</div>`;
+        return;
+    }
+
+    const monthFilter = document.getElementById("financeMonthFilter");
+    const blockFilter = document.getElementById("financeBlockFilter");
+    const selectedMonth = monthFilter ? monthFilter.value : "";
+    const selectedBlock = blockFilter ? blockFilter.value : "";
+    const dynamics = selectedMonth
+        ? financeData.dynamics.filter(item => item["Месяц"] === selectedMonth)
+        : financeData.dynamics;
+
+    const monthOptions = financeData.months.map(month => `
+        <option value="${escapeAttr(month)}" ${month === selectedMonth ? "selected" : ""}>
+            ${escapeHtml(month)}
+        </option>
+    `).join("");
+
+    const showDynamics = !selectedBlock || selectedBlock === "dynamics";
+    const showRoutes = !selectedBlock || selectedBlock === "routes";
+    const showCarriers = !selectedBlock || selectedBlock === "carriers";
+    const carrierMonth = selectedMonth ? selectedMonth.split(" ")[0] : "";
+
+    const dynamicsHtml = dynamics.map(item => `
+        <div class="finance-card">
+            <div class="finance-card-title">${escapeHtml(financeValue(item["Месяц"]))}</div>
+            ${renderFinanceMetrics([
+                ["Оплачено", item["Оплачено"]],
+                ["К оплате / в пути", item["К оплате / в пути"]],
+                ["План логистики", item["План логистики"]],
+                ["Итого потребность", item["Итого потребность"]],
+                ["Кг факт+план", item["Кг факт+план"]],
+                ["Средняя ₽/кг", item["Средняя ₽/кг"]]
+            ])}
+        </div>
+    `).join("");
+
+    const routesHtml = financeData.routes.map(item => `
+        <div class="finance-card">
+            <div class="finance-card-title">${escapeHtml(financeValue(item["Маршрут"]))}</div>
+            ${renderFinanceMetrics([
+                ["Оплачено", item["Оплачено"]],
+                ["К оплате / в пути", item["К оплате / в пути"]],
+                ["Итого", item["Итого"]],
+                ["Кг", item["Кг"]],
+                ["Средняя ₽/кг", item["Средняя ₽/кг"]]
+            ])}
+        </div>
+    `).join("");
+
+    const carriersHtml = financeData.carriers.map(item => {
+        const monthlyMetrics = Object.entries(item)
+            .filter(([key, value]) =>
+                key !== "ТК" &&
+                key !== "Среднее" &&
+                Boolean(clean(value)) &&
+                (!carrierMonth || key === carrierMonth)
+            )
+            .map(([month, value]) => [month, value]);
+
+        return `
+            <div class="finance-card">
+                <div class="finance-card-title">${escapeHtml(financeValue(item["ТК"]))}</div>
+                ${renderFinanceMetrics([
+                    ["Среднее", item["Среднее"]],
+                    ...monthlyMetrics
+                ])}
+            </div>
+        `;
+    }).join("");
+
+    container.innerHTML = `
+        <div class="finance-summary">
+            <div class="finance-summary-card">
+                <span>К оплате / в пути</span>
+                <b>${escapeHtml(financeValue(financeData.totals["К оплате / в пути"]))}</b>
+            </div>
+            <div class="finance-summary-card">
+                <span>План логистики</span>
+                <b>${escapeHtml(financeValue(financeData.totals["План логистики"]))}</b>
+            </div>
+            <div class="finance-summary-card">
+                <span>Итого потребность</span>
+                <b>${escapeHtml(financeValue(financeData.totals["Итого потребность"]))}</b>
+            </div>
+            <div class="finance-summary-card">
+                <span>Обновлено</span>
+                <b>${escapeHtml(financeValue(financeData.updated))}</b>
+            </div>
+        </div>
+
+        <div class="finance-period">Период: ${escapeHtml(financeValue(financeData.period))}</div>
+
+        <div class="controls-grid">
+            <select id="financeMonthFilter">
+                <option value="">Все месяцы</option>
+                ${monthOptions}
+            </select>
+            <select id="financeBlockFilter">
+                <option value="" ${!selectedBlock ? "selected" : ""}>Все блоки</option>
+                <option value="dynamics" ${selectedBlock === "dynamics" ? "selected" : ""}>Динамика</option>
+                <option value="routes" ${selectedBlock === "routes" ? "selected" : ""}>Маршруты</option>
+                <option value="carriers" ${selectedBlock === "carriers" ? "selected" : ""}>ТК</option>
+            </select>
+        </div>
+
+        ${showDynamics ? `
+            <section class="finance-section">
+                <h2 class="finance-section-title">Динамика по месяцам</h2>
+                <div class="finance-grid">${dynamicsHtml || `<div class="empty">Нет данных за выбранный месяц</div>`}</div>
+            </section>
+        ` : ""}
+
+        ${showRoutes ? `
+            <section class="finance-section">
+                <h2 class="finance-section-title">Расходы по маршрутам</h2>
+                <div class="finance-grid">${routesHtml}</div>
+            </section>
+        ` : ""}
+
+        ${showCarriers ? `
+            <section class="finance-section">
+                <h2 class="finance-section-title">Средняя цена за кг по ТК</h2>
+                <div class="finance-grid">${carriersHtml}</div>
+            </section>
+        ` : ""}
+    `;
+
+    document
+        .getElementById("financeMonthFilter")
+        .addEventListener("change", renderFinanceDashboard);
+
+    document
+        .getElementById("financeBlockFilter")
+        .addEventListener("change", renderFinanceDashboard);
+}
+
+async function loadFinanceData(){
+    if(financeData || financeLoading){
+        if(financeData){
+            renderFinanceDashboard();
+        }
+        return;
+    }
+
+    financeLoading = true;
+    document.getElementById("financeContent").innerHTML =
+        `<div class="empty">Загрузка бюджета логистики...</div>`;
+
+    try{
+        const response = await fetch(FINANCE_URL);
+
+        if(!response.ok){
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const rows = parseCSV(await response.text());
+        const report = parseFinanceReport(rows);
+
+        if(
+            report.dynamics.length === 0 &&
+            report.routes.length === 0 &&
+            report.carriers.length === 0
+        ){
+            throw new Error("Секции финансового отчёта не найдены");
+        }
+
+        financeData = report;
+        renderFinanceDashboard();
+    }
+    catch(error){
+        console.error("Не удалось загрузить бюджет логистики:", error);
+        financeData = null;
+        document.getElementById("financeContent").innerHTML =
+            `<div class="empty">Не удалось загрузить бюджет логистики</div>`;
+    }
+    finally{
+        financeLoading = false;
+    }
+}
+
 async function loadShipments(){
-    const response = await fetch(SHEET_URL);
+    const requestedBrand = activeBrand;
+    const requestId = ++loadRequestId;
 
-    const csv = await response.text();
+    console.log("activeBrand:", activeBrand);
+    console.log("SHEETS[activeBrand].url:", SHEETS[activeBrand].url);
 
-    const rows = parseCSV(csv);
+    emptyStateMessage = "Загрузка данных...";
+    shipmentsData = [];
+    fillTransportFilter();
+    applyFilters();
 
-    const headers = rows[0];
+    try{
+        const response = await fetch(getCurrentSheetUrl());
 
-    shipmentsData = rows
+        if(!response.ok){
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const csv = await response.text();
+
+        if(requestId !== loadRequestId || requestedBrand !== activeBrand){
+            return;
+        }
+
+        const rows = parseCSV(csv);
+
+        console.log("Количество строк CSV после загрузки:", rows.length);
+
+        const headers = rows[0] || [];
+
+        emptyStateMessage = SHEETS[requestedBrand].emptyText;
+
+        shipmentsData = rows
         .slice(1)
         .map(cols => {
             const obj = {};
@@ -1224,10 +1927,22 @@ async function loadShipments(){
                 ])
             };
         })
-        .filter(item => item.spec);
+            .filter(item => item.spec);
 
-    fillTransportFilter();
-    applyFilters();
+        fillTransportFilter();
+        applyFilters();
+    }
+    catch(error){
+        if(requestId !== loadRequestId || requestedBrand !== activeBrand){
+            return;
+        }
+
+        console.error(`Не удалось загрузить данные ${requestedBrand}:`, error);
+        emptyStateMessage = SHEETS[requestedBrand].emptyText;
+        shipmentsData = [];
+        fillTransportFilter();
+        applyFilters();
+    }
 }
 
 function getStatusClass(status){
@@ -1707,8 +2422,12 @@ function renderShipments(data){
     updateAttentionBadge();
 
     if(sorted.length === 0){
+        const message = shipmentsData.length === 0
+            ? emptyStateMessage
+            : "Ничего не найдено";
+
         document.getElementById("shipments").innerHTML =
-        `<div class="empty">Ничего не найдено</div>`;
+        `<div class="empty">${message}</div>`;
 
         return;
     }
@@ -1804,6 +2523,7 @@ function toggleStatus(status, button){
     }
 
     applyFilters();
+    closeModal("filtersModal");
 }
 
 function togglePaymentFilter(filter, button){
@@ -1821,6 +2541,7 @@ function togglePaymentFilter(filter, button){
     }
 
     applyFilters();
+    closeModal("filtersModal");
 }
 
 function copyShipment(cardId){
@@ -2005,6 +2726,41 @@ document
 document
     .getElementById("transportFilter")
     .addEventListener("change", applyFilters);
+
+document.querySelectorAll(".brand-tab").forEach(button => {
+    button.addEventListener("click", () => {
+        switchBrand(button.dataset.brand);
+    });
+});
+
+document.querySelectorAll(".main-section-tab").forEach(button => {
+    button.addEventListener("click", () => {
+        switchMainSection(button.dataset.section);
+    });
+});
+
+const header = document.querySelector(".header");
+let headerTouchStartX = null;
+
+header.addEventListener("touchstart", event => {
+    headerTouchStartX = event.changedTouches[0].clientX;
+}, {passive:true});
+
+header.addEventListener("touchend", event => {
+    if(headerTouchStartX === null){
+        return;
+    }
+
+    const swipeDistance = event.changedTouches[0].clientX - headerTouchStartX;
+    headerTouchStartX = null;
+
+    if(swipeDistance < -50){
+        switchBrand("lancet");
+    }
+    else if(swipeDistance > 50){
+        switchBrand("hircost");
+    }
+}, {passive:true});
 
 loadShipments();
 
