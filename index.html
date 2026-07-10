@@ -111,6 +111,7 @@ button:active,
 /* ВЕРХ */
 
 .header{
+    position:relative;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -125,10 +126,12 @@ button:active,
     box-shadow:0 12px 34px rgba(0,0,0,0.18);
     touch-action:pan-y;
     user-select:none;
+    overflow:hidden;
 }
 
 .header-title-block{
     min-width:0;
+    transition:opacity 0.18s ease, transform 0.18s ease;
 }
 
 .brand-switcher{
@@ -170,6 +173,7 @@ h1{
     display:flex;
     gap:8px;
     align-items:center;
+    transition:opacity 0.18s ease, transform 0.18s ease;
 }
 
 .round-btn{
@@ -184,26 +188,66 @@ h1{
     box-shadow:0 8px 24px rgba(0,0,0,0.16);
 }
 
-/* ПОИСК */
+/* ПОИСК В HEADER */
 
-.search-box{
-    max-height:0;
+.header-search{
+    position:absolute;
+    inset:14px;
+    z-index:4;
+    display:flex;
+    align-items:center;
+    gap:8px;
     opacity:0;
-    overflow:hidden;
-    margin-bottom:0;
-    transform:translateY(-4px);
-    transition:
-        max-height 0.2s ease,
-        opacity 0.18s ease,
-        transform 0.18s ease,
-        margin-bottom 0.18s ease;
+    visibility:hidden;
+    pointer-events:none;
+    transform:translateX(14px) scaleX(0.96);
+    transform-origin:right center;
+    transition:opacity 0.18s ease, transform 0.2s ease, visibility 0.18s ease;
 }
 
-.search-box.active{
-    max-height:76px;
+.header.search-open .header-search{
     opacity:1;
-    margin-bottom:10px;
-    transform:translateY(0);
+    visibility:visible;
+    pointer-events:auto;
+    transform:translateX(0) scaleX(1);
+}
+
+.header.search-open .header-title-block,
+.header.search-open .header-actions{
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(-12px);
+}
+
+.header-search input{
+    flex:1;
+    min-width:0;
+    height:46px;
+    margin:0;
+    padding:0 14px;
+    border:1px solid rgba(255,255,255,0.34);
+    border-radius:14px;
+    background:rgba(255,255,255,0.96);
+    color:#0f172a;
+    box-shadow:0 8px 22px rgba(0,0,0,0.14);
+    font-size:15px;
+}
+
+.header-search input::-webkit-search-cancel-button{
+    display:none;
+}
+
+.header-search-close{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border:1px solid rgba(255,255,255,0.24);
+    border-radius:50%;
+    background:rgba(255,255,255,0.16);
+    color:white;
+    font-size:25px;
+    line-height:1;
+    cursor:pointer;
 }
 
 input, select{
@@ -318,6 +362,10 @@ input, select{
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-bottom:10px;
+}
+
+.shipment-controls{
+    grid-template-columns:minmax(220px, 360px);
 }
 
 .main-section-switcher{
@@ -1388,6 +1436,10 @@ select{
         grid-template-columns:1fr;
     }
 
+    .header-search{
+        inset:12px;
+    }
+
     h1{
         font-size:22px;
     }
@@ -1458,7 +1510,30 @@ select{
     </div>
 
     <div class="header-actions">
-        <button class="round-btn" onclick="toggleSearch()">🔎</button>
+        <button
+            class="round-btn"
+            id="searchToggle"
+            type="button"
+            aria-label="Открыть поиск"
+            aria-expanded="false"
+            onclick="openHeaderSearch()"
+        >🔎</button>
+    </div>
+
+    <div class="header-search" id="headerSearch">
+        <input
+            type="search"
+            id="search"
+            placeholder="Поиск по спецификации, товару, ТК..."
+            autocomplete="off"
+        >
+        <button
+            class="header-search-close"
+            id="searchClose"
+            type="button"
+            aria-label="Закрыть поиск"
+            onclick="closeHeaderSearch(true)"
+        >×</button>
     </div>
 </div>
 
@@ -1468,14 +1543,6 @@ select{
 </div>
 
 <div id="shipmentsSection">
-
-<div class="search-box" id="searchBox">
-    <input
-        type="text"
-        id="search"
-        placeholder="Поиск: спецификация, товар, ТК"
-    >
-</div>
 
 <div class="top-actions">
     <div class="status-filter-control" id="statusFilterControl">
@@ -1501,14 +1568,7 @@ select{
     <button class="action-btn" onclick="openCalendarModal()">📅 Календарь</button>
 </div>
 
-<div class="controls-grid">
-    <select id="sortSelect">
-        <option value="nearest">Сначала ближайшие</option>
-        <option value="newest">Сначала новые</option>
-        <option value="delays">Сначала задержки</option>
-        <option value="unpaid">Сначала неоплаченные</option>
-    </select>
-
+<div class="controls-grid shipment-controls">
     <select id="transportFilter">
         <option value="">Все ТК</option>
     </select>
@@ -1687,16 +1747,45 @@ let financeUnlocked = false;
 let financePasswordInput = "";
 let financeData = null;
 let financeLoading = false;
+let isSearchOpen = false;
 
 let calendarDate = new Date();
 calendarDate.setDate(1);
 calendarDate.setHours(0,0,0,0);
 
-function toggleSearch(){
+function updateHeaderSearchUI(){
     document
-        .getElementById("searchBox")
-        .classList
-        .toggle("active");
+        .querySelector(".header")
+        .classList.toggle("search-open", isSearchOpen);
+
+    document
+        .getElementById("searchToggle")
+        .setAttribute("aria-expanded", String(isSearchOpen));
+}
+
+function openHeaderSearch(){
+    isSearchOpen = true;
+    updateHeaderSearchUI();
+
+    const input = document.getElementById("search");
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+}
+
+function closeHeaderSearch(clear = true, shouldApply = true){
+    const input = document.getElementById("search");
+
+    if(clear){
+        input.value = "";
+    }
+
+    isSearchOpen = false;
+    updateHeaderSearchUI();
+    input.blur();
+
+    if(clear && shouldApply){
+        applyFilters();
+    }
 }
 
 function toggleStatusDropdown(event){
@@ -1799,7 +1888,7 @@ function switchMainSection(section){
 function resetBrandFilters(){
     selectedStatus = "";
 
-    document.getElementById("search").value = "";
+    closeHeaderSearch(true, false);
     document.getElementById("transportFilter").value = "";
     updateStatusFilterUI();
     closeStatusDropdown();
@@ -2577,12 +2666,14 @@ function getIssues(item){
         issues.push(`Просрочка: ${Math.abs(diffDaysFromToday(item.arrivalDate))} дн.`);
     }
 
-    if(!isPaid(item.specPayment)){
-        issues.push("Не оплачена спецификация");
-    }
+    if(activeBrand === "hircost"){
+        if(!isPaid(item.specPayment)){
+            issues.push("Не оплачена спецификация");
+        }
 
-    if(!isPaid(item.transportPayment)){
-        issues.push("Не оплачена транспортная");
+        if(!isPaid(item.transportPayment)){
+            issues.push("Не оплачена транспортная");
+        }
     }
 
     return issues;
@@ -2811,6 +2902,18 @@ function renderCard(item, cardId){
         ? "Просрочка"
         : item.status;
 
+    const paymentRows = activeBrand === "hircost" ? `
+        <div class="row">
+            <span>Оплата по спецификации</span>
+            <b>${paymentBadge(item.specPayment)}</b>
+        </div>
+
+        <div class="row">
+            <span>Оплата за транспорт</span>
+            <b>${paymentBadge(item.transportPayment)}</b>
+        </div>
+    ` : "";
+
     return `
         <div class="card ${cardStateClass}" id="card-${cardId}">
             <div
@@ -2877,15 +2980,7 @@ function renderCard(item, cardId){
                     <b>${escapeHtml(item.priceKg || "-")}</b>
                 </div>
 
-                <div class="row">
-                    <span>Оплата по спецификации</span>
-                    <b>${paymentBadge(item.specPayment)}</b>
-                </div>
-
-                <div class="row">
-                    <span>Оплата за транспорт</span>
-                    <b>${paymentBadge(item.transportPayment)}</b>
-                </div>
+                ${paymentRows}
 
                 ${documentsBlock(item)}
 
@@ -2902,53 +2997,18 @@ function renderCard(item, cardId){
 }
 
 function sortData(data){
-    const sortValue = document.getElementById("sortSelect").value;
-
     const sorted = [...data];
 
-    if(sortValue === "nearest"){
-        sorted.sort((a,b) => {
-            const da = parseDate(a.arrivalDate);
-            const db = parseDate(b.arrivalDate);
+    sorted.sort((a,b) => {
+        const da = parseDate(a.readyDate) || parseDate(a.arrivalDate);
+        const db = parseDate(b.readyDate) || parseDate(b.arrivalDate);
 
-            if(!da && !db) return 0;
-            if(!da) return 1;
-            if(!db) return -1;
+        if(!da && !db) return 0;
+        if(!da) return 1;
+        if(!db) return -1;
 
-            return da - db;
-        });
-    }
-
-    if(sortValue === "newest"){
-        sorted.sort((a,b) => {
-            const da = parseDate(a.readyDate) || parseDate(a.arrivalDate);
-            const db = parseDate(b.readyDate) || parseDate(b.arrivalDate);
-
-            if(!da && !db) return 0;
-            if(!da) return 1;
-            if(!db) return -1;
-
-            return db - da;
-        });
-    }
-
-    if(sortValue === "delays"){
-        sorted.sort((a,b) => {
-            const av = (isDelayed(a) ? 2 : 0) + (isOverdue(a) ? 3 : 0);
-            const bv = (isDelayed(b) ? 2 : 0) + (isOverdue(b) ? 3 : 0);
-
-            return bv - av;
-        });
-    }
-
-    if(sortValue === "unpaid"){
-        sorted.sort((a,b) => {
-            const av = (!isPaid(a.specPayment) ? 1 : 0) + (!isPaid(a.transportPayment) ? 1 : 0);
-            const bv = (!isPaid(b.specPayment) ? 1 : 0) + (!isPaid(b.transportPayment) ? 1 : 0);
-
-            return bv - av;
-        });
-    }
+        return db - da;
+    });
 
     return sorted;
 }
@@ -3063,7 +3123,7 @@ function copyShipment(cardId){
 
     const specTitle = formatSpecTitle(item.spec);
 
-    const text = [
+    const textLines = [
         specTitle,
         `Товар: ${item.item || "-"}`,
         `Статус: ${item.status || "-"}`,
@@ -3072,10 +3132,17 @@ function copyShipment(cardId){
         `Дней до прихода: ${getDaysLabel(item)}`,
         `Кол-во: ${item.qty || "-"}`,
         `Вес: ${item.weight || "-"}`,
-        `Сумма транспорта: ${item.transportSum || "-"}`,
-        `Оплата по спецификации: ${item.specPayment || "Не оплачено"}`,
-        `Оплата за транспорт: ${item.transportPayment || "Не оплачено"}`
-    ].join("\n");
+        `Сумма транспорта: ${item.transportSum || "-"}`
+    ];
+
+    if(activeBrand === "hircost"){
+        textLines.push(
+            `Оплата по спецификации: ${item.specPayment || "Не оплачено"}`,
+            `Оплата за транспорт: ${item.transportPayment || "Не оплачено"}`
+        );
+    }
+
+    const text = textLines.join("\n");
 
     if(navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(text)
@@ -3229,11 +3296,24 @@ document.addEventListener("click", event => {
     if(!document.getElementById("statusFilterControl").contains(event.target)){
         closeStatusDropdown();
     }
+
+    if(
+        isSearchOpen &&
+        !document.getElementById("search").value &&
+        !event.target.closest(".header")
+    ){
+        closeHeaderSearch(false);
+    }
 });
 
 document.addEventListener("keydown", event => {
     if(event.key === "Escape"){
         closeStatusDropdown();
+
+        if(isSearchOpen){
+            closeHeaderSearch(true);
+        }
+
         closeModal("calendarModal");
     }
 });
@@ -3241,10 +3321,6 @@ document.addEventListener("keydown", event => {
 document
     .getElementById("search")
     .addEventListener("input", applyFilters);
-
-document
-    .getElementById("sortSelect")
-    .addEventListener("change", applyFilters);
 
 document
     .getElementById("transportFilter")
