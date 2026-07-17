@@ -2174,24 +2174,61 @@ function parseFinanceSection(rows, title){
     return result;
 }
 
+function combineFinanceRubles(values){
+    if(!values.some(value => clean(value))){
+        return "";
+    }
+
+    const total = values.reduce((sum, value) =>
+        sum + parseNumber(value), 0
+    );
+
+    return `${total.toLocaleString("ru-RU")} ₽`;
+}
+
+function normalizeFinancePayable(items){
+    return items.map(item => ({
+        ...item,
+        "К оплате / в пути": getField(item, [
+            "К оплате / в пути",
+            "К оплате"
+        ])
+    }));
+}
+
 function parseFinanceReport(rows){
-    const totalsIndex = findFinanceRow(rows, "К оплате / в пути");
+    const totalsIndex = rows.findIndex(row =>
+        row.some(cell => normalize(cell) === "итого потребность")
+    );
     const totalHeaders = totalsIndex >= 0 ? rows[totalsIndex] : [];
     const totalValues = totalsIndex >= 0 ? (rows[totalsIndex + 1] || []) : [];
-    const totals = {};
+    const rawTotals = {};
 
     totalHeaders.forEach((header, index) => {
         if(clean(header)){
-            totals[clean(header)] = clean(totalValues[index]);
+            rawTotals[clean(header)] = clean(totalValues[index]);
         }
     });
+
+    const legacyPayable = getField(rawTotals, ["К оплате / в пути"]);
+    const totals = {
+        ...rawTotals,
+        "К оплате / в пути": legacyPayable || combineFinanceRubles([
+            getField(rawTotals, ["Транспорт в пути"]),
+            getField(rawTotals, ["К оплате по транспорту"])
+        ])
+    };
 
     const periodIndex = findFinanceRow(rows, "Период");
     const periodRow = periodIndex >= 0 ? rows[periodIndex] : [];
     const updatedIndex = periodRow.findIndex(cell => normalize(cell) === "обновлено");
 
-    const dynamics = parseFinanceSection(rows, "Динамика по месяцам");
-    const routes = parseFinanceSection(rows, "Расходы по маршрутам");
+    const dynamics = normalizeFinancePayable(
+        parseFinanceSection(rows, "Динамика по месяцам")
+    );
+    const routes = normalizeFinancePayable(
+        parseFinanceSection(rows, "Расходы по маршрутам")
+    );
     const carriers = parseFinanceSection(
         rows,
         "Средняя цена за кг по транспортным компаниям"
